@@ -25,6 +25,7 @@ Route::middleware('throttle:10,1')->group(function () {
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::get('/shop', [ShopController::class,'index'])->name('shop.index');
 Route::get('/shop/{product_slug}', [ShopController::class,'product_details'])->name('shop.product.details');
+Route::post('/shop/{product_slug}/notify-stock', [ShopController::class,'notifyStock'])->middleware('throttle:5,1')->name('shop.product.notify-stock');
 
 //Cart Routes
 Route::get('/cart', [CartController::class,'index'])->name('cart.index');

@@ -26,6 +26,10 @@ return [
     'return_request_button' => 'Demander un retour',
     'return_request_success' => 'Votre demande de retour a été envoyée. Nous reviendrons vers vous rapidement.',
     'return_window_closed' => 'Le délai de retour pour cette commande est écoulé.',
+
+    'notify_stock_email_placeholder' => 'Votre adresse e-mail',
+    'notify_stock_button' => 'Me prévenir',
+    'notify_stock_success' => 'Vous recevrez un e-mail dès que ce produit sera de nouveau disponible.',
     'account_delete' => 'Supprimer mon compte',
     'account_logout' => 'Déconnexion',
 

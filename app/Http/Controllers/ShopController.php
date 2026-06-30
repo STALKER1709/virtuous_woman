@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Brand;
+use App\Models\StockNotification;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,5 +70,23 @@ class ShopController extends Controller
             ? Wishlist::where('user_id', Auth::id())->where('product_id', $product->id)->exists()
             : false;
         return view('details',compact('product','rproducts','avg_rating','reviews_count','in_wishlist'));
+    }
+
+    public function notifyStock(Request $request, $product_slug)
+    {
+        $product = Product::where('slug', $product_slug)->firstOrFail();
+
+        abort_unless($product->stock_status === 'outofstock', 403);
+
+        $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
+        StockNotification::firstOrCreate([
+            'product_id' => $product->id,
+            'email' => $request->email,
+        ]);
+
+        return back()->with('success', __('messages.notify_stock_success'));
     }
 }

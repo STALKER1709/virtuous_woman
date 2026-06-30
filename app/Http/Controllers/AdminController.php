@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BackInStock;
 use App\Mail\OrderStatusUpdated;
 use App\Mail\ReturnStatusUpdated;
 use App\Models\Brand;
@@ -10,6 +11,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderReturn;
 use App\Models\Product;
+use App\Models\StockNotification;
 use App\Models\ProductVariant;
 use App\Models\Review;
 use Carbon\Carbon;
@@ -374,6 +376,7 @@ class AdminController extends Controller
         ]);
 
         $product = Product::find($request->id);
+        $was_outofstock = $product->stock_status === 'outofstock';
         $product->name = $request->name;
         $product->slug = Str::slug($request->name);
         $product->short_description = $request->short_description;
@@ -437,7 +440,24 @@ class AdminController extends Controller
 
         $product->save();
 
+        if ($was_outofstock && $product->stock_status === 'instock') {
+            $this->notifyBackInStock($product);
+        }
+
         return redirect()->route('admin.products')->with('status', 'Product updated successfully.');
+    }
+
+    private function notifyBackInStock(Product $product): void
+    {
+        $notifications = StockNotification::where('product_id', $product->id)
+            ->whereNull('notified_at')
+            ->get();
+
+        foreach ($notifications as $notification) {
+            Mail::to($notification->email)->send(new BackInStock($product));
+            $notification->notified_at = now();
+            $notification->save();
+        }
     }
 
     public function product_delete($id){

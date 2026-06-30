@@ -159,6 +159,18 @@
                             </div>
                         </form>
                     @endif
+                    @if ($product->stock_status === 'outofstock')
+                        @if (session('success'))
+                            <p class="alert alert-success">{{ session('success') }}</p>
+                        @endif
+                        <form method="POST" action="{{ route('shop.product.notify-stock', $product->slug) }}" class="d-flex flex-wrap gap-2 mb-3">
+                            @csrf
+                            <input type="email" name="email" class="form-control form-control_gray" style="max-width: 260px;" placeholder="{{ __('messages.notify_stock_email_placeholder') }}" required value="{{ Auth::check() ? Auth::user()->email : '' }}">
+                            <button type="submit" class="btn btn-outline-primary-2">
+                                <span>{{ __('messages.notify_stock_button') }}</span>
+                            </button>
+                        </form>
+                    @endif
                     <div class="product-single__addtolinks">
                         @auth
                             <form name="wishlist-form" method="post" action="{{ route('wishlist.toggle') }}" class="d-inline">

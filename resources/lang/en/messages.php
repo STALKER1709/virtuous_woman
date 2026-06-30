@@ -26,6 +26,10 @@ return [
     'return_request_button' => 'Request a Return',
     'return_request_success' => 'Your return request has been submitted. We will get back to you shortly.',
     'return_window_closed' => 'The return window for this order has closed.',
+
+    'notify_stock_email_placeholder' => 'Your email address',
+    'notify_stock_button' => 'Notify Me',
+    'notify_stock_success' => 'You will receive an email as soon as this product is back in stock.',
     'account_delete' => 'Delete My Account',
     'account_logout' => 'Logout',
 
