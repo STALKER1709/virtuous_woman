@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -24,5 +27,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.app', function ($view) {
             $view->with('navCategories', Category::orderBy('name', 'ASC')->get());
         });
+
+        Event::listen(Registered::class, SendEmailVerificationNotification::class);
     }
 }

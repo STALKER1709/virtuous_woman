@@ -33,6 +33,12 @@ return [
     'order_status_label' => 'Statut',
     'order_payment_label' => 'Paiement',
 
+    'verify_email_title' => 'Vérifiez votre adresse e-mail',
+    'verify_email_resent' => 'Un nouveau lien de vérification a été envoyé à votre adresse e-mail.',
+    'verify_email_intro' => 'Avant de continuer, veuillez vérifier votre e-mail pour un lien de vérification.',
+    'verify_email_not_received' => 'Si vous n\'avez pas reçu l\'e-mail',
+    'verify_email_resend_link' => 'cliquez ici pour en demander un autre',
+
     'return_title' => 'Retour / Remboursement',
     'return_status_label' => 'Statut du retour',
     'return_reason_placeholder' => 'Dites-nous pourquoi vous souhaitez retourner cette commande',

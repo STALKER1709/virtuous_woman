@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('throttle:10,1')->group(function () {
-    Auth::routes();
+    Auth::routes(['verify' => true]);
 });
 
 //Routes racines
@@ -104,11 +104,13 @@ Route::middleware(['auth'])->group(function(){
     Route::put('/account-details/password', [UserController::class,'updatePassword'])->name('user.password.update');
 
     //checkout routes
-    Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class,'store'])->middleware('throttle:10,1')->name('checkout.store');
-    Route::get('/order/confirmation/{order_number}', [CheckoutController::class,'confirmation'])->name('checkout.confirmation');
-    Route::post('/checkout/coupon', [CheckoutController::class,'applyCoupon'])->name('checkout.coupon.apply');
-    Route::delete('/checkout/coupon', [CheckoutController::class,'removeCoupon'])->name('checkout.coupon.remove');
+    Route::middleware('verified')->group(function () {
+        Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
+        Route::post('/checkout', [CheckoutController::class,'store'])->middleware('throttle:10,1')->name('checkout.store');
+        Route::get('/order/confirmation/{order_number}', [CheckoutController::class,'confirmation'])->name('checkout.confirmation');
+        Route::post('/checkout/coupon', [CheckoutController::class,'applyCoupon'])->name('checkout.coupon.apply');
+        Route::delete('/checkout/coupon', [CheckoutController::class,'removeCoupon'])->name('checkout.coupon.remove');
+    });
 
     //gdpr routes
     Route::get('/account/export-data', [UserController::class,'exportData'])->name('user.export-data');

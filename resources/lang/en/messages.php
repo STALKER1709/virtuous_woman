@@ -33,6 +33,12 @@ return [
     'order_status_label' => 'Status',
     'order_payment_label' => 'Payment',
 
+    'verify_email_title' => 'Verify Your Email Address',
+    'verify_email_resent' => 'A fresh verification link has been sent to your email address.',
+    'verify_email_intro' => 'Before proceeding, please check your email for a verification link.',
+    'verify_email_not_received' => 'If you did not receive the email',
+    'verify_email_resend_link' => 'click here to request another',
+
     'return_title' => 'Return / Refund',
     'return_status_label' => 'Return status',
     'return_reason_placeholder' => 'Tell us why you want to return this order',
