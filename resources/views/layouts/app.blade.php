@@ -691,7 +691,7 @@ body {
       <div class="container d-md-flex align-items-center">
         <span class="footer-copyright me-auto">©2024 Surfside Media</span>
         <div class="footer-settings d-md-flex align-items-center">
-          <a href="{{ route('legal.confidentialite') }}">{{ __('messages.footer_privacy_policy') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cgv') }}">{{ __('messages.footer_terms') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.mentions') }}">{{ __('messages.footer_legal_notice') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cookies') }}">{{ __('messages.footer_cookie_policy') }}</a>
+          <a href="{{ route('legal.confidentialite') }}">{{ __('messages.footer_privacy_policy') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cgv') }}">{{ __('messages.footer_terms') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.mentions') }}">{{ __('messages.footer_legal_notice') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cookies') }}">{{ __('messages.footer_cookie_policy') }}</a> &nbsp;|&nbsp; <a href="javascript:void(0);" onclick="window.vwOpenCookiePreferences && window.vwOpenCookiePreferences();">{{ __('messages.footer_cookie_preferences') }}</a>
         </div>
       </div>
     </div>
@@ -739,23 +739,88 @@ body {
   <div class="page-overlay"></div>
 
   <div id="cookieConsent" class="position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 d-none" style="z-index: 2000;">
-    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
-      <p class="mb-0 small">We use cookies to improve your experience on Virtuous Woman and to remember your cart and preferences. Read our <a href="{{ route('legal.cookies') }}" class="text-white text-decoration-underline">Cookie Policy</a>.</p>
-      <button type="button" id="cookieConsentAccept" class="btn btn-primary btn-sm text-uppercase text-nowrap">Accept</button>
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <p class="mb-0 small">We use cookies to improve your experience on Virtuous Woman. Necessary cookies are always on; you choose whether to allow analytics and marketing cookies. Read our <a href="{{ route('legal.cookies') }}" class="text-white text-decoration-underline">Cookie Policy</a>.</p>
+        <div class="d-flex flex-wrap gap-2">
+          <button type="button" id="cookieConsentCustomize" class="btn btn-outline-light btn-sm text-uppercase text-nowrap">Customize</button>
+          <button type="button" id="cookieConsentReject" class="btn btn-outline-light btn-sm text-uppercase text-nowrap">Reject Non-Essential</button>
+          <button type="button" id="cookieConsentAccept" class="btn btn-primary btn-sm text-uppercase text-nowrap">Accept All</button>
+        </div>
+      </div>
+      <div id="cookieConsentPanel" class="d-none mt-3 pt-3 border-top border-secondary">
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" checked disabled id="cookieConsentNecessary">
+          <label class="form-check-label small" for="cookieConsentNecessary">Necessary (always on) &mdash; required for cart, login and checkout to work.</label>
+        </div>
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="cookieConsentAnalytics">
+          <label class="form-check-label small" for="cookieConsentAnalytics">Analytics &mdash; helps us understand how visitors use the site.</label>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="cookieConsentMarketing">
+          <label class="form-check-label small" for="cookieConsentMarketing">Marketing &mdash; used to personalize promotions.</label>
+        </div>
+        <button type="button" id="cookieConsentSave" class="btn btn-primary btn-sm text-uppercase">Save Preferences</button>
+      </div>
     </div>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var consentKey = 'vw_cookie_consent';
       var banner = document.getElementById('cookieConsent');
+      var panel = document.getElementById('cookieConsentPanel');
+      var analyticsBox = document.getElementById('cookieConsentAnalytics');
+      var marketingBox = document.getElementById('cookieConsentMarketing');
       if (!banner) return;
-      if (!localStorage.getItem(consentKey)) {
+
+      function readConsent() {
+        try {
+          return JSON.parse(localStorage.getItem(consentKey));
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function applyConsent(consent) {
+        document.cookie = 'vw_cookie_consent=' + encodeURIComponent(JSON.stringify(consent)) + ';path=/;max-age=' + (60 * 60 * 24 * 365) + ';SameSite=Lax';
+        window.vwConsent = consent;
+        document.dispatchEvent(new CustomEvent('vw-consent-updated', { detail: consent }));
+      }
+
+      function saveConsent(consent) {
+        localStorage.setItem(consentKey, JSON.stringify(consent));
+        applyConsent(consent);
+        banner.classList.add('d-none');
+      }
+
+      var existing = readConsent();
+      if (existing) {
+        applyConsent(existing);
+      } else {
         banner.classList.remove('d-none');
       }
+
       document.getElementById('cookieConsentAccept').addEventListener('click', function () {
-        localStorage.setItem(consentKey, '1');
-        banner.classList.add('d-none');
+        saveConsent({ necessary: true, analytics: true, marketing: true });
       });
+      document.getElementById('cookieConsentReject').addEventListener('click', function () {
+        saveConsent({ necessary: true, analytics: false, marketing: false });
+      });
+      document.getElementById('cookieConsentCustomize').addEventListener('click', function () {
+        panel.classList.toggle('d-none');
+      });
+      document.getElementById('cookieConsentSave').addEventListener('click', function () {
+        saveConsent({ necessary: true, analytics: analyticsBox.checked, marketing: marketingBox.checked });
+      });
+
+      window.vwOpenCookiePreferences = function () {
+        var current = readConsent() || { necessary: true, analytics: false, marketing: false };
+        analyticsBox.checked = !!current.analytics;
+        marketingBox.checked = !!current.marketing;
+        panel.classList.remove('d-none');
+        banner.classList.remove('d-none');
+      };
     });
   </script>
 

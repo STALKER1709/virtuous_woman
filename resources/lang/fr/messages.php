@@ -69,6 +69,7 @@ return [
     'footer_terms' => 'Conditions générales',
     'footer_legal_notice' => 'Mentions légales',
     'footer_cookie_policy' => 'Politique de cookies',
+    'footer_cookie_preferences' => 'Préférences de cookies',
 
     'lang_switch' => 'Langue',
 
