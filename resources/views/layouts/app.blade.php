@@ -473,7 +473,7 @@ body {
       <a href="{{ route('pages.about') }}" class="navigation__link">{{ __('messages.nav_about') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="contact.html" class="navigation__link">{{ __('messages.nav_contact') }}</a>
+      <a href="{{ route('pages.contact') }}" class="navigation__link">{{ __('messages.nav_contact') }}</a>
     </li>
   </ul>
 </nav>
@@ -505,22 +505,22 @@ body {
                   <button class="btn-icon btn-close-lg search-popup__reset" type="reset"></button>
                 </div>
 
-                <div class="search-popup__results">
-                  <div class="sub-menu search-suggestion">
-                    <h6 class="sub-menu__title fs-base">Quicklinks</h6>
-                    <ul class="sub-menu__list list-unstyled">
-                      <li class="sub-menu__item"><a href="shop2.html" class="menu-link menu-link_us-s">New Arrivals</a>
-                      </li>
-                      <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Dresses</a></li>
-                      <li class="sub-menu__item"><a href="shop3.html" class="menu-link menu-link_us-s">Accessories</a>
-                      </li>
-                      <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Footwear</a></li>
-                      <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Sweatshirt</a></li>
-                    </ul>
-                  </div>
+                @if (($navCategories ?? collect())->isNotEmpty())
+                  <div class="search-popup__results">
+                    <div class="sub-menu search-suggestion">
+                      <h6 class="sub-menu__title fs-base">{{ __('messages.nav_shop') }}</h6>
+                      <ul class="sub-menu__list list-unstyled">
+                        @foreach ($navCategories as $navCategory)
+                          <li class="sub-menu__item">
+                            <a href="{{ route('shop.index', ['categories' => $navCategory->id]) }}" class="menu-link menu-link_us-s">{{ $navCategory->name }}</a>
+                          </li>
+                        @endforeach
+                      </ul>
+                    </div>
 
-                  <div class="search-result row row-cols-5"></div>
-                </div>
+                    <div class="search-result row row-cols-5"></div>
+                  </div>
+                @endif
               </form>
             </div>
           </div>
@@ -557,7 +557,7 @@ body {
 
           @endguest
 
-          <a href="wishlist.html" class="header-tools__item">
+          <a href="{{ Auth::check() ? route('wishlist.index') : route('login') }}" class="header-tools__item">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
               <use href="#icon_heart" />
             </svg>
@@ -651,37 +651,25 @@ body {
         </div>
 
         <div class="footer-column footer-menu mb-4 mb-lg-0">
-          <h6 class="sub-menu__title text-uppercase">Shop</h6>
+          <h6 class="sub-menu__title text-uppercase">{{ __('messages.nav_shop') }}</h6>
           <ul class="sub-menu__list list-unstyled">
-            <li class="sub-menu__item"><a href="shop2.html" class="menu-link menu-link_us-s">New Arrivals</a></li>
-            <li class="sub-menu__item"><a href="shop3.html" class="menu-link menu-link_us-s">Accessories</a></li>
-            <li class="sub-menu__item"><a href="shop4.html" class="menu-link menu-link_us-s">Men</a></li>
-            <li class="sub-menu__item"><a href="shop5.html" class="menu-link menu-link_us-s">Women</a></li>
-            <li class="sub-menu__item"><a href="shop1.html" class="menu-link menu-link_us-s">Shop All</a></li>
+            @foreach (($navCategories ?? collect())->take(4) as $navCategory)
+              <li class="sub-menu__item"><a href="{{ route('shop.index', ['categories' => $navCategory->id]) }}" class="menu-link menu-link_us-s">{{ $navCategory->name }}</a></li>
+            @endforeach
+            <li class="sub-menu__item"><a href="{{ route('shop.index') }}" class="menu-link menu-link_us-s">{{ __('messages.nav_shop') }}</a></li>
           </ul>
         </div>
 
         <div class="footer-column footer-menu mb-4 mb-lg-0">
           <h6 class="sub-menu__title text-uppercase">Help</h6>
           <ul class="sub-menu__list list-unstyled">
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Customer Service</a></li>
-            <li class="sub-menu__item"><a href="account_dashboard.html" class="menu-link menu-link_us-s">{{ __('messages.nav_my_account') }}</a>
+            <li class="sub-menu__item"><a href="{{ route('pages.contact') }}" class="menu-link menu-link_us-s">{{ __('messages.contact_title') }}</a>
             </li>
-            <li class="sub-menu__item"><a href="store_location.html" class="menu-link menu-link_us-s">Find a Store</a>
+            <li class="sub-menu__item"><a href="{{ Auth::check() ? route('user.index') : route('login') }}" class="menu-link menu-link_us-s">{{ __('messages.nav_my_account') }}</a>
+            </li>
+            <li class="sub-menu__item"><a href="{{ route('pages.faq') }}" class="menu-link menu-link_us-s">FAQ</a>
             </li>
             <li class="sub-menu__item"><a href="{{ route('legal.confidentialite') }}" class="menu-link menu-link_us-s">{{ __('messages.footer_legal_privacy') }}</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Gift Card</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column footer-menu mb-4 mb-lg-0">
-          <h6 class="sub-menu__title text-uppercase">Categories</h6>
-          <ul class="sub-menu__list list-unstyled">
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Shirts</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Jeans</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Shoes</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Bags</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Shop All</a></li>
           </ul>
         </div>
       </div>
