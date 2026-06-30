@@ -130,9 +130,9 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="coupons.html" class="virtuous-menu-link">
+                                    <a href="{{ route('admin.coupons') }}" class="virtuous-menu-link">
                                         <div class="icon"><i class="icon-gift"></i></div>
-                                        <div class="text">Community Offers</div>
+                                        <div class="text">Coupons</div>
                                     </a>
                                 </li>
 

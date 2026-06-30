@@ -8,7 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Virtuous Woman') }}</title>
+    <title>@hasSection('title')@yield('title') - {{ config('app.name', 'Virtuous Woman') }}@else{{ config('app.name', 'Virtuous Woman') }}@endif</title>
+    <meta name="description" content="@yield('meta_description', 'Virtuous Woman - Empowering fashion and accessories for the modern woman.')">
 
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="surfside media" />
@@ -346,9 +347,9 @@ body {
     <nav
       class="header-mobile__navigation navigation d-flex flex-column w-100 position-absolute top-100 bg-body overflow-auto">
       <div class="container">
-        <form action="#" method="GET" class="search-field position-relative mt-4 mb-3">
+        <form action="{{ route('shop.index') }}" method="GET" class="search-field position-relative mt-4 mb-3">
           <div class="position-relative">
-            <input class="search-field__input w-100 border rounded-1" type="text" name="search-keyword"
+            <input class="search-field__input w-100 border rounded-1" type="text" name="q"
               placeholder="Search products" />
             <button class="btn-icon search-popup__submit pb-0 me-2" type="submit">
               <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -490,11 +491,11 @@ body {
             </div>
 
             <div class="search-popup js-hidden-content">
-              <form action="#" method="GET" class="search-field container">
+              <form action="{{ route('shop.index') }}" method="GET" class="search-field container">
                 <p class="text-uppercase text-secondary fw-medium mb-4">What are you looking for?</p>
                 <div class="position-relative">
                   <input class="search-field__input search-popup__input w-100 fw-medium" type="text"
-                    name="search-keyword" placeholder="Search products" />
+                    name="q" placeholder="Search products" />
                   <button class="btn-icon search-popup__submit" type="submit">
                     <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
@@ -733,6 +734,27 @@ body {
 
   <div id="scrollTop" class="visually-hidden end-0"></div>
   <div class="page-overlay"></div>
+
+  <div id="cookieConsent" class="position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 d-none" style="z-index: 2000;">
+    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <p class="mb-0 small">We use cookies to improve your experience on Virtuous Woman and to remember your cart and preferences. By continuing to browse, you accept our use of cookies.</p>
+      <button type="button" id="cookieConsentAccept" class="btn btn-primary btn-sm text-uppercase text-nowrap">Accept</button>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var consentKey = 'vw_cookie_consent';
+      var banner = document.getElementById('cookieConsent');
+      if (!banner) return;
+      if (!localStorage.getItem(consentKey)) {
+        banner.classList.remove('d-none');
+      }
+      document.getElementById('cookieConsentAccept').addEventListener('click', function () {
+        localStorage.setItem(consentKey, '1');
+        banner.classList.add('d-none');
+      });
+    });
+  </script>
 
   <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
   <script src="{{asset('assets/js/plugins/bootstrap.bundle.min.js')}}"></script>

@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', $product->name)
+@section('meta_description', \Illuminate\Support\Str::limit(strip_tags($product->short_description), 155))
 @section('content')
     <main class="pt-90">
         <div class="mb-md-1 pb-md-3"></div>
@@ -96,23 +98,15 @@
                     <h1 class="product-single__name">{{ $product->name }}</h1>
                     <div class="product-single__rating">
                         <div class="reviews-group d-flex">
-                            <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_star" />
-                            </svg>
-                            <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_star" />
-                            </svg>
-                            <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_star" />
-                            </svg>
-                            <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_star" />
-                            </svg>
-                            <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_star" />
-                            </svg>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg" fill="{{ $i <= round($avg_rating) ? '#ffa800' : '#ccc' }}">
+                                    <use href="#icon_star" />
+                                </svg>
+                            @endfor
                         </div>
-                        <span class="reviews-note text-lowercase text-secondary ms-1">8k+ reviews</span>
+                        <span class="reviews-note text-lowercase text-secondary ms-1">
+                            {{ $reviews_count > 0 ? $avg_rating . ' (' . $reviews_count . ' ' . ($reviews_count > 1 ? 'reviews' : 'review') . ')' : 'No reviews yet' }}
+                        </span>
                     </div>
                     <div class="product-single__price">
                         <span class="current-price">
@@ -144,7 +138,7 @@
                                 <input type="hidden" name="id" value="{{ $product->id }}">
                                 <input type="hidden" name="name" value="{{ $product->name }}">
                                 <input type="hidden" name="price"
-                                    value="{{ $product->sale_price == '' ? {{--  --}} : $product->sale_price }}">
+                                    value="{{ $product->sale_price ?: $product->regular_price }}">
                                 <button type="submit" class="btn btn-primary btn-addtocart" data-aside="cartDrawer">Add
                                     to
                                     Cart</button>
@@ -152,10 +146,21 @@
                         </form>
                     @endif
                     <div class="product-single__addtolinks">
-                        <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16"
-                                height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <use href="#icon_heart" />
-                            </svg><span>Add to Wishlist</span></a>
+                        @auth
+                            <form name="wishlist-form" method="post" action="{{ route('wishlist.toggle') }}" class="d-inline">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <button type="submit" class="menu-link menu-link_us-s add-to-wishlist border-0 bg-transparent p-0"><svg width="16"
+                                        height="16" viewBox="0 0 20 20" fill="{{ $in_wishlist ? '#000' : 'none' }}" xmlns="http://www.w3.org/2000/svg">
+                                        <use href="#icon_heart" />
+                                    </svg><span>{{ $in_wishlist ? 'Remove from Wishlist' : 'Add to Wishlist' }}</span></button>
+                            </form>
+                        @else
+                            <a href="{{ route('login') }}" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16"
+                                    height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <use href="#icon_heart" />
+                                </svg><span>Add to Wishlist</span></a>
+                        @endauth
                         <share-button class="share-button">
                             <button
                                 class="menu-link menu-link_us-s to-share border-0 bg-transparent d-flex align-items-center">
@@ -222,7 +227,7 @@
                     <li class="nav-item" role="presentation">
                         <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab"
                             href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Reviews
-                            (2)</a>
+                            ({{ $reviews_count }})</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -260,141 +265,58 @@
                     <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
                         <h2 class="product-single__reviews-title">Reviews</h2>
                         <div class="product-single__reviews-list">
-                            <div class="product-single__reviews-item">
-                                <div class="customer-avatar">
-                                    <img loading="lazy" src="assets/images/avatar.jpg" alt="" />
-                                </div>
-                                <div class="customer-review">
-                                    <div class="customer-name">
-                                        <h6>Janice Miller</h6>
-                                        <div class="reviews-group d-flex">
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
+                            @forelse ($product->reviews as $review)
+                                <div class="product-single__reviews-item">
+                                    <div class="customer-avatar">
+                                        <img loading="lazy" src="{{ asset('assets/images/avatar.jpg') }}" alt="" />
+                                    </div>
+                                    <div class="customer-review">
+                                        <div class="customer-name">
+                                            <h6>{{ $review->user->name ?? 'Anonymous' }}</h6>
+                                            <div class="reviews-group d-flex">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg" fill="{{ $i <= $review->rating ? '#ffa800' : '#ccc' }}">
+                                                        <use href="#icon_star" />
+                                                    </svg>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <div class="review-date">{{ $review->created_at->format('F d, Y') }}</div>
+                                        <div class="review-text">
+                                            <p>{{ $review->comment }}</p>
                                         </div>
                                     </div>
-                                    <div class="review-date">April 06, 2023</div>
-                                    <div class="review-text">
-                                        <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo
-                                            minus id quod
-                                            maxime placeat facere possimus, omnis voluptas assumenda est…</p>
-                                    </div>
                                 </div>
-                            </div>
-                            <div class="product-single__reviews-item">
-                                <div class="customer-avatar">
-                                    <img loading="lazy" src="assets/images/avatar.jpg" alt="" />
-                                </div>
-                                <div class="customer-review">
-                                    <div class="customer-name">
-                                        <h6>Benjam Porter</h6>
-                                        <div class="reviews-group d-flex">
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                            <svg class="review-star" viewBox="0 0 9 9"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <use href="#icon_star" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                    <div class="review-date">April 06, 2023</div>
-                                    <div class="review-text">
-                                        <p>Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo
-                                            minus id quod
-                                            maxime placeat facere possimus, omnis voluptas assumenda est…</p>
-                                    </div>
-                                </div>
-                            </div>
+                            @empty
+                                <p>No reviews yet.</p>
+                            @endforelse
                         </div>
                         <div class="product-single__review-form">
-                            <form name="customer-review-form">
-                                <h5>Be the first to review “Message Cotton T-Shirt”</h5>
-                                <p>Your email address will not be published. Required fields are marked *</p>
-                                <div class="select-star-rating">
-                                    <label>Your rating *</label>
-                                    <span class="star-rating">
-                                        <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc"
-                                            viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z" />
-                                        </svg>
-                                        <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc"
-                                            viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z" />
-                                        </svg>
-                                        <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc"
-                                            viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z" />
-                                        </svg>
-                                        <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc"
-                                            viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z" />
-                                        </svg>
-                                        <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc"
-                                            viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z" />
-                                        </svg>
-                                    </span>
-                                    <input type="hidden" id="form-input-rating" value="" />
-                                </div>
-                                <div class="mb-4">
-                                    <textarea id="form-input-review" class="form-control form-control_gray" placeholder="Your Review" cols="30"
-                                        rows="8"></textarea>
-                                </div>
-                                <div class="form-label-fixed mb-4">
-                                    <label for="form-input-name" class="form-label">Name *</label>
-                                    <input id="form-input-name" class="form-control form-control-md form-control_gray">
-                                </div>
-                                <div class="form-label-fixed mb-4">
-                                    <label for="form-input-email" class="form-label">Email address *</label>
-                                    <input id="form-input-email" class="form-control form-control-md form-control_gray">
-                                </div>
-                                <div class="form-check mb-4">
-                                    <input class="form-check-input form-check-input_fill" type="checkbox" value=""
-                                        id="remember_checkbox">
-                                    <label class="form-check-label" for="remember_checkbox">
-                                        Save my name, email, and website in this browser for the next time I comment.
-                                    </label>
-                                </div>
-                                <div class="form-action">
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </div>
-                            </form>
+                            @auth
+                                <form name="customer-review-form" method="post" action="{{ route('review.store') }}">
+                                    @csrf
+                                    <h5>Be the first to review &ldquo;{{ $product->name }}&rdquo;</h5>
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <div class="select-star-rating mb-3">
+                                        <label class="form-label" for="form-input-rating">Your rating *</label>
+                                        <select id="form-input-rating" name="rating" class="form-control form-control_gray" required>
+                                            <option value="">Select a rating</option>
+                                            @for ($i = 5; $i >= 1; $i--)
+                                                <option value="{{ $i }}">{{ $i }} {{ $i > 1 ? 'stars' : 'star' }}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="mb-4">
+                                        <textarea name="comment" class="form-control form-control_gray" placeholder="Your Review" cols="30"
+                                            rows="8" maxlength="2000"></textarea>
+                                    </div>
+                                    <div class="form-action">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            @else
+                                <p>Please <a href="{{ route('login') }}">log in</a> to leave a review.</p>
+                            @endauth
                         </div>
                     </div>
                 </div>
@@ -464,7 +386,7 @@
                                             <input type="hidden" name="quantity" value="1">
                                             <input type="hidden" name="name" value="{{ $rproduct->name }}">
                                             <input type="hidden" name="price"
-                                                value="{{ $rproduct->sale_price == '' ? {{--  --}}: $rproduct->sale_price }}">
+                                                value="{{ $rproduct->sale_price ?: $rproduct->regular_price }}">
                                             <button type="submit"
                                                 class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase fw-medium"
                                                 data-aside="cartDrawer" title="Add To Cart">Add To Cart</button>
@@ -479,22 +401,37 @@
                                     </h6>
                                     <div class="product-card__price d-flex">
                                         <span class="money price">
-                                            @if ($product->sale_price)
-                                                <s>{{ $product->regular_price }}€</s> {{ $product->sale_price }}€
+                                            @if ($rproduct->sale_price)
+                                                <s>{{ $rproduct->regular_price }}€</s> {{ $rproduct->sale_price }}€
                                             @else
-                                                {{ $product->regular_price }}€
+                                                {{ $rproduct->regular_price }}€
                                             @endif
                                         </span>
                                     </div>
 
-                                    <button
-                                        class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
-                                        title="Add To Wishlist">
-                                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <use href="#icon_heart" />
-                                        </svg>
-                                    </button>
+                                    @auth
+                                        <form method="post" action="{{ route('wishlist.toggle') }}" class="position-absolute top-0 end-0">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $rproduct->id }}">
+                                            <button type="submit"
+                                                class="pc__btn-wl bg-transparent border-0 js-add-wishlist"
+                                                title="Add To Wishlist">
+                                                <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <use href="#icon_heart" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @else
+                                        <a href="{{ route('login') }}"
+                                            class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist"
+                                            title="Add To Wishlist">
+                                            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <use href="#icon_heart" />
+                                            </svg>
+                                        </a>
+                                    @endauth
                                 </div>
                             </div>
                         @endforeach

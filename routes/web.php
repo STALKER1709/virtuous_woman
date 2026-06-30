@@ -6,13 +6,17 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
 
-Auth::routes();
+Route::middleware('throttle:10,1')->group(function () {
+    Auth::routes();
+});
 
 //Routes racines
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
@@ -60,6 +64,16 @@ Route::middleware(['auth', AuthAdmin::class])->group(function(){
     Route::get('/admin/orders', [AdminController::class,'orders'])->name('admin.orders');
     Route::get('/admin/order/{id}', [AdminController::class,'order_details'])->name('admin.order.details');
     Route::put('/admin/order/{id}/status', [AdminController::class,'order_update_status'])->name('admin.order.status.update');
+
+    //coupons routes
+    Route::get('/admin/coupons', [AdminController::class,'coupons'])->name('admin.coupons');
+    Route::get('/admin/coupon/add', [AdminController::class,'coupon_add'])->name('admin.coupon.add');
+    Route::post('/admin/coupon/store', [AdminController::class,'coupon_store'])->name('admin.coupon.store');
+    Route::put('/admin/coupon/{id}/toggle', [AdminController::class,'coupon_toggle'])->name('admin.coupon.toggle');
+    Route::delete('/admin/coupon/{id}/delete', [AdminController::class,'coupon_delete'])->name('admin.coupon.delete');
+
+    //reviews moderation
+    Route::delete('/admin/review/{id}/delete', [AdminController::class,'review_delete'])->name('admin.review.delete');
 });
 
 
@@ -72,6 +86,15 @@ Route::middleware(['auth'])->group(function(){
 
     //checkout routes
     Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
-    Route::post('/checkout', [CheckoutController::class,'store'])->name('checkout.store');
+    Route::post('/checkout', [CheckoutController::class,'store'])->middleware('throttle:10,1')->name('checkout.store');
     Route::get('/order/confirmation/{order_number}', [CheckoutController::class,'confirmation'])->name('checkout.confirmation');
+    Route::post('/checkout/coupon', [CheckoutController::class,'applyCoupon'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon', [CheckoutController::class,'removeCoupon'])->name('checkout.coupon.remove');
+
+    //wishlist routes
+    Route::get('/account-wishlist', [WishlistController::class,'index'])->name('wishlist.index');
+    Route::post('/wishlist/toggle', [WishlistController::class,'toggle'])->name('wishlist.toggle');
+
+    //review routes
+    Route::post('/review/store', [ReviewController::class,'store'])->middleware('throttle:5,1')->name('review.store');
 });

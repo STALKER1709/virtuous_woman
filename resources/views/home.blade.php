@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('meta_description', 'Virtuous Woman - Empowering fashion and accessories for the modern woman. Shop the latest collection.')
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">

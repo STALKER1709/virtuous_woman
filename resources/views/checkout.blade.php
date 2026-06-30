@@ -105,19 +105,43 @@
                                         </li>
                                     @endforeach
                                 </ul>
+                                <div class="mb-4">
+                                    @if ($coupon)
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Coupon <strong>{{ $coupon->code }}</strong> applied</span>
+                                            <form method="post" action="{{ route('checkout.coupon.remove') }}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                            </form>
+                                        </div>
+                                    @else
+                                        <form method="post" action="{{ route('checkout.coupon.apply') }}" class="d-flex gap-2">
+                                            @csrf
+                                            <input type="text" name="code" class="form-control form-control_gray" placeholder="Coupon code">
+                                            <button type="submit" class="btn btn-outline-primary text-nowrap">Apply</button>
+                                        </form>
+                                    @endif
+                                </div>
                                 <table class="cart-totals">
                                     <tbody>
                                         <tr>
                                             <th>Subtotal</th>
-                                            <td>{{ Cart::instance('cart')->subtotal() }}&euro;</td>
+                                            <td>{{ number_format($subtotal, 2) }}&euro;</td>
                                         </tr>
+                                        @if ($discount > 0)
+                                            <tr>
+                                                <th>Discount @if ($coupon)({{ $coupon->code }})@endif</th>
+                                                <td>-{{ number_format($discount, 2) }}&euro;</td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <th>Shipping</th>
-                                            <td>Free</td>
+                                            <td>{{ $shipping > 0 ? number_format($shipping, 2).'€' : 'Free' }}</td>
                                         </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td>{{ Cart::instance('cart')->total() }}&euro;</td>
+                                            <td>{{ number_format($total, 2) }}&euro;</td>
                                         </tr>
                                     </tbody>
                                 </table>

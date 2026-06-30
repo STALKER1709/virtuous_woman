@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\OrderStatusUpdated;
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;
 use Intervention\Image\ImageManager;
@@ -457,6 +461,69 @@ class AdminController extends Controller
         $order->status = $request->status;
         $order->save();
 
+        Mail::to($order->email)->send(new OrderStatusUpdated($order));
+
         return redirect()->route('admin.order.details', $id)->with('status', 'Order status updated successfully.');
+    }
+
+    // Coupons section
+
+    public function coupons()
+    {
+        $coupons = Coupon::orderBy('created_at', 'DESC')->paginate(10);
+
+        return view('admin.coupons', compact('coupons'));
+    }
+
+    public function coupon_add()
+    {
+        return view('admin.coupon-add');
+    }
+
+    public function coupon_store(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:50|unique:coupons,code',
+            'type' => 'required|in:percent,fixed',
+            'value' => 'required|numeric|min:0',
+            'max_uses' => 'nullable|integer|min:1',
+            'expires_at' => 'nullable|date',
+        ]);
+
+        $coupon = new Coupon();
+        $coupon->code = strtoupper($request->code);
+        $coupon->type = $request->type;
+        $coupon->value = $request->value;
+        $coupon->max_uses = $request->max_uses;
+        $coupon->expires_at = $request->expires_at;
+        $coupon->active = true;
+        $coupon->save();
+
+        return redirect()->route('admin.coupons')->with('status', 'Coupon created successfully.');
+    }
+
+    public function coupon_toggle($id)
+    {
+        $coupon = Coupon::findOrFail($id);
+        $coupon->active = ! $coupon->active;
+        $coupon->save();
+
+        return redirect()->route('admin.coupons')->with('status', 'Coupon updated successfully.');
+    }
+
+    public function coupon_delete($id)
+    {
+        Coupon::findOrFail($id)->delete();
+
+        return redirect()->route('admin.coupons')->with('status', 'Coupon deleted successfully.');
+    }
+
+    // Reviews moderation
+
+    public function review_delete($id)
+    {
+        Review::findOrFail($id)->delete();
+
+        return back()->with('status', 'Review deleted successfully.');
     }
 }
