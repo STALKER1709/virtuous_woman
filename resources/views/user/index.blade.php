@@ -12,11 +12,44 @@
         <div class="col-lg-9">
           <div class="page-content my-account__dashboard">
             <p>Welcome to your <strong>Sisterhood Space</strong> 🌸</p>
-            <p>From your empowerment dashboard you can view your <a class="unerline-link" href="account_orders.html">recent
-                orders</a>, manage your <a class="unerline-link" href="account_edit_address.html">shipping
-                addresses</a>, and <a class="unerline-link" href="account_edit.html">update your personal information</a>.</p>
-            <p class="mt-4">Remember, you're part of a community that celebrates <strong>authenticity, style, and empowerment</strong>. 
+            <p>From your empowerment dashboard you can view your <a class="unerline-link" href="{{ route('user.orders') }}">recent
+                orders</a>, manage your <a class="unerline-link" href="account-address.html">shipping
+                addresses</a>, and <a class="unerline-link" href="account-details.html">update your personal information</a>.</p>
+            <p class="mt-4">Remember, you're part of a community that celebrates <strong>authenticity, style, and empowerment</strong>.
               Every purchase supports our mission to inspire and uplift women worldwide.</p>
+
+            <div class="mt-4 pt-3 border-top">
+              <h5 class="mb-3" style="color: var(--virtuous-orange);">Recent Orders</h5>
+              @if ($orders->count() > 0)
+                <div class="cart-table__wrapper">
+                  <table class="cart-table">
+                    <thead>
+                      <tr>
+                        <th>Order No</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($orders as $order)
+                        <tr>
+                          <td>{{ $order->order_number }}</td>
+                          <td>{{ $order->created_at->format('Y-m-d') }}</td>
+                          <td>{{ ucfirst($order->status) }}</td>
+                          <td>{{ number_format($order->total, 2) }}&euro;</td>
+                          <td><a class="unerline-link" href="{{ route('user.order.details', $order->order_number) }}">View</a></td>
+                        </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              @else
+                <p>You haven't placed any orders yet. <a class="unerline-link" href="{{ route('shop.index') }}">Start shopping</a>.</p>
+              @endif
+            </div>
+
             <div class="mt-4 pt-3 border-top">
               <h5 class="mb-3" style="color: var(--virtuous-orange);">Daily Inspiration</h5>
               <blockquote class="fs-5 fst-italic" style="color: var(--virtuous-dark);">

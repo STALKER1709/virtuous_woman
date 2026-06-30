@@ -117,13 +117,8 @@
                                     </a>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <a href="orders.html" class="virtuous-submenu-link">
+                                            <a href="{{ route('admin.orders') }}" class="virtuous-submenu-link">
                                                 <div class="text">All Orders</div>
-                                            </a>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <a href="order-tracking.html" class="virtuous-submenu-link">
-                                                <div class="text">Order Tracking</div>
                                             </a>
                                         </li>
                                     </ul>

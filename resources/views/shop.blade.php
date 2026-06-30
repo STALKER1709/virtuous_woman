@@ -34,7 +34,8 @@
                                         
                                         <li class="list-item">
                                             <span class="menu-link py-1">
-                                                <input type="checkbox" class="chk-category" name="categories" value="{{ $category->id }}" />
+                                                <input type="checkbox" class="chk-category" name="categories" value="{{ $category->id }}"
+                                                @if(in_array($category->id, explode(",",$f_categories))) checked="checked" @endif />
                                                 {{ $category->name }}
                                             </span>
                                             <span class="text-right float-end">
@@ -481,6 +482,7 @@
         <input type="hidden" name="size" id="size" value="{{ $size }}" />
         <input type="hidden" name="order" id="order" value="{{ $order }}" />
         <input type="hidden" name="brands" id="hdnBrands" />
+        <input type="hidden" name="categories" id="hdnCategories" />
     </form>
 @endsection
 
@@ -508,6 +510,19 @@
                 }
             });
             $('#hdnBrands').val(brands);
+            $('#frmfilter').submit();
+        });
+
+        $("input[name='categories']").on('change', function(){
+            var categories = "";
+            $("input[name='categories']:checked").each(function(){
+                if(categories==""){
+                    categories += $(this).val();
+                }else{
+                    categories += "," + $(this).val();
+                }
+            });
+            $('#hdnCategories').val(categories);
             $('#frmfilter').submit();
         });
     });

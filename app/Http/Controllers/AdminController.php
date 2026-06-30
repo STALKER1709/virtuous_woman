@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,7 +18,29 @@ class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.index');
+        $total_orders = Order::count();
+        $total_revenue = Order::sum('total');
+        $pending_orders = Order::where('status', 'pending')->count();
+        $pending_revenue = Order::where('status', 'pending')->sum('total');
+        $delivered_orders = Order::where('status', 'delivered')->count();
+        $delivered_revenue = Order::where('status', 'delivered')->sum('total');
+        $processing_orders = Order::where('status', 'processing')->count();
+        $cancelled_orders = Order::where('status', 'cancelled')->count();
+        $cancelled_revenue = Order::where('status', 'cancelled')->sum('total');
+        $recent_orders = Order::withCount('items')->orderBy('created_at', 'DESC')->take(5)->get();
+
+        return view('admin.index', compact(
+            'total_orders',
+            'total_revenue',
+            'pending_orders',
+            'pending_revenue',
+            'delivered_orders',
+            'delivered_revenue',
+            'processing_orders',
+            'cancelled_orders',
+            'cancelled_revenue',
+            'recent_orders'
+        ));
     }
 
     // brands section
@@ -406,5 +429,34 @@ class AdminController extends Controller
             }
         $product->delete();
         return redirect()->route('admin.products')->with('status', 'Product deleted successfully.');
+    }
+
+    // Orders section
+
+    public function orders()
+    {
+        $orders = Order::orderBy('created_at', 'DESC')->paginate(10);
+
+        return view('admin.orders', compact('orders'));
+    }
+
+    public function order_details($id)
+    {
+        $order = Order::with('items')->findOrFail($id);
+
+        return view('admin.order-details', compact('order'));
+    }
+
+    public function order_update_status(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,processing,shipped,delivered,cancelled',
+        ]);
+
+        $order = Order::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->route('admin.order.details', $id)->with('status', 'Order status updated successfully.');
     }
 }

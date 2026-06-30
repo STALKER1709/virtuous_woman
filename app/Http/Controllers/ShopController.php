@@ -14,7 +14,7 @@ class ShopController extends Controller
         $o_column = "";
         $o_order = "";
         $order = $request->query("order") ? $request->query("order") : -1;
-        $f_categories = Category::where("categories","LIKE","%".$o_column."%");
+        $f_categories = $request->query("categories");
         $f_brands = $request->query("brands");
         switch($order){
             case 1:
@@ -40,10 +40,16 @@ class ShopController extends Controller
         $brands = Brand::orderBy('name','ASC')->get();
         $categories = Category::orderBy('name','ASC')->get();
         $products = Product::where(function($query) use ($f_brands){
-              $query->whereIn('brand_id',explode(",",$f_brands))->orWhereRaw("'".$f_brands."' = ''");
+              if($f_brands){
+                  $query->whereIn('brand_id',explode(",",$f_brands));
+              }
+        })->where(function($query) use ($f_categories){
+              if($f_categories){
+                  $query->whereIn('category_id',explode(",",$f_categories));
+              }
         })->
                 orderBy($o_column,$o_order)->paginate($size);
-        return view('shop',compact('products','size', 'order', 'brands', 'f_brands', 'categories'));
+        return view('shop',compact('products','size', 'order', 'brands', 'f_brands', 'f_categories', 'categories'));
     }
 
     public function product_details($product_slug){

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
@@ -54,6 +55,11 @@ Route::middleware(['auth', AuthAdmin::class])->group(function(){
     Route::get('/admin/product/{id}/edit', [AdminController::class,'product_edit'])->name('admin.product.edit');
     Route::put('/admin/product/update', [AdminController::class,'product_update'])->name('admin.product.update');
     Route::delete('/admin/product/{id}/delete', [AdminController::class,'product_delete'])->name('admin.product.delete');
+
+    //orders routes
+    Route::get('/admin/orders', [AdminController::class,'orders'])->name('admin.orders');
+    Route::get('/admin/order/{id}', [AdminController::class,'order_details'])->name('admin.order.details');
+    Route::put('/admin/order/{id}/status', [AdminController::class,'order_update_status'])->name('admin.order.status.update');
 });
 
 
@@ -61,4 +67,11 @@ Route::middleware(['auth', AuthAdmin::class])->group(function(){
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/account-dashboard', [UserController::class,'index'])->name('user.index');
+    Route::get('/account-orders', [UserController::class,'orders'])->name('user.orders');
+    Route::get('/account-orders/{order_number}', [UserController::class,'order_details'])->name('user.order.details');
+
+    //checkout routes
+    Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class,'store'])->name('checkout.store');
+    Route::get('/order/confirmation/{order_number}', [CheckoutController::class,'confirmation'])->name('checkout.confirmation');
 });

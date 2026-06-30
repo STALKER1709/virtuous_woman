@@ -16,7 +16,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Total Community Orders</div>
-                                                            <h4 class="virtuous-stat-number">3</h4>
+                                                            <h4 class="virtuous-stat-number">{{ $total_orders }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -30,7 +30,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Total Empowerment Revenue</div>
-                                                            <h4 class="virtuous-stat-number">$481.34</h4>
+                                                            <h4 class="virtuous-stat-number">${{ number_format($total_revenue, 2) }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -44,7 +44,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Pending Sisterhood Orders</div>
-                                                            <h4 class="virtuous-stat-number">3</h4>
+                                                            <h4 class="virtuous-stat-number">{{ $pending_orders }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -58,7 +58,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Pending Revenue</div>
-                                                            <h4 class="virtuous-stat-number">$481.34</h4>
+                                                            <h4 class="virtuous-stat-number">${{ number_format($pending_revenue, 2) }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -76,7 +76,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Delivered with Love</div>
-                                                            <h4 class="virtuous-stat-number">0</h4>
+                                                            <h4 class="virtuous-stat-number">{{ $delivered_orders }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -90,7 +90,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Delivered Revenue</div>
-                                                            <h4 class="virtuous-stat-number">$0.00</h4>
+                                                            <h4 class="virtuous-stat-number">${{ number_format($delivered_revenue, 2) }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -104,7 +104,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Canceled Orders</div>
-                                                            <h4 class="virtuous-stat-number">0</h4>
+                                                            <h4 class="virtuous-stat-number">{{ $cancelled_orders }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -118,7 +118,7 @@
                                                         </div>
                                                         <div>
                                                             <div class="body-text mb-2">Canceled Amount</div>
-                                                            <h4 class="virtuous-stat-number">$0.00</h4>
+                                                            <h4 class="virtuous-stat-number">${{ number_format($cancelled_revenue, 2) }}</h4>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -156,11 +156,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap10">
-                                                    <h4 class="virtuous-revenue-number">$37,802</h4>
-                                                    <div class="box-icon-trending up virtuous-trending">
-                                                        <i class="icon-trending-up"></i>
-                                                        <div class="body-title number">0.56%</div>
-                                                    </div>
+                                                    <h4 class="virtuous-revenue-number">${{ number_format($total_revenue, 2) }}</h4>
                                                 </div>
                                             </div>
                                             <div>
@@ -171,11 +167,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center gap10">
-                                                    <h4 class="virtuous-revenue-number">$28,305</h4>
-                                                    <div class="box-icon-trending up virtuous-trending">
-                                                        <i class="icon-trending-up"></i>
-                                                        <div class="body-title number">0.56%</div>
-                                                    </div>
+                                                    <h4 class="virtuous-revenue-number">{{ $total_orders }}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -189,7 +181,7 @@
                                         <div class="flex items-center justify-between">
                                             <h5 class="virtuous-table-title">Recent Sisterhood Orders</h5>
                                             <div class="dropdown default">
-                                                <a class="btn btn-secondary dropdown-toggle virtuous-view-all-btn" href="#">
+                                                <a class="btn btn-secondary dropdown-toggle virtuous-view-all-btn" href="{{ route('admin.orders') }}">
                                                     <span class="view-all">View all orders</span>
                                                 </a>
                                             </div>
@@ -203,29 +195,26 @@
                                                             <th>Sisterhood Member</th>
                                                             <th class="text-center">Contact</th>
                                                             <th class="text-center">Subtotal</th>
-                                                            <th class="text-center">Tax</th>
                                                             <th class="text-center">Total</th>
                                                             <th class="text-center">Status</th>
                                                             <th class="text-center">Order Date</th>
                                                             <th class="text-center">Items</th>
-                                                            <th class="text-center">Delivered</th>
                                                             <th class="text-center">Actions</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
+                                                        @forelse($recent_orders as $order)
                                                         <tr class="virtuous-table-row">
-                                                            <td class="text-center">#001</td>
-                                                            <td class="text-center">Divyansh Kumar</td>
-                                                            <td class="text-center">1234567891</td>
-                                                            <td class="text-center">$172.00</td>
-                                                            <td class="text-center">$36.12</td>
-                                                            <td class="text-center virtuous-total-amount">$208.12</td>
-                                                            <td class="text-center"><span class="virtuous-status ordered">Ordered</span></td>
-                                                            <td class="text-center">2024-07-11 00:54:14</td>
-                                                            <td class="text-center">2</td>
-                                                            <td class="text-center">-</td>
+                                                            <td class="text-center">{{ $order->order_number }}</td>
+                                                            <td class="text-center">{{ $order->name }}</td>
+                                                            <td class="text-center">{{ $order->mobile }}</td>
+                                                            <td class="text-center">${{ number_format($order->subtotal, 2) }}</td>
+                                                            <td class="text-center virtuous-total-amount">${{ number_format($order->total, 2) }}</td>
+                                                            <td class="text-center"><span class="virtuous-status ordered">{{ ucfirst($order->status) }}</span></td>
+                                                            <td class="text-center">{{ $order->created_at->format('Y-m-d H:i:s') }}</td>
+                                                            <td class="text-center">{{ $order->items_count }}</td>
                                                             <td class="text-center">
-                                                                <a href="#" class="virtuous-action-link">
+                                                                <a href="{{ route('admin.order.details', $order->id) }}" class="virtuous-action-link">
                                                                     <div class="list-icon-function view-icon">
                                                                         <div class="item eye virtuous-view-icon">
                                                                             <i class="icon-eye"></i>
@@ -234,6 +223,11 @@
                                                                 </a>
                                                             </td>
                                                         </tr>
+                                                        @empty
+                                                        <tr class="virtuous-table-row">
+                                                            <td class="text-center" colspan="9">No orders yet.</td>
+                                                        </tr>
+                                                        @endforelse
                                                     </tbody>
                                                 </table>
                                             </div>
