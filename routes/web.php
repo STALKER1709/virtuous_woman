@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
@@ -116,6 +117,12 @@ Route::get('/locale/{locale}', function (string $locale) {
     session(['locale' => $locale]);
     return redirect()->back();
 })->name('locale.switch');
+
+//content pages
+Route::get('/about', [PageController::class,'about'])->name('pages.about');
+Route::get('/faq', [PageController::class,'faq'])->name('pages.faq');
+Route::get('/contact', [PageController::class,'contact'])->name('pages.contact');
+Route::post('/contact', [PageController::class,'contactSubmit'])->middleware('throttle:5,1')->name('contact.submit');
 
 //legal pages
 Route::get('/mentions-legales', [LegalController::class,'mentionsLegales'])->name('legal.mentions');

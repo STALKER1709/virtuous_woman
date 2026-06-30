@@ -379,10 +379,10 @@ body {
               <a href="{{ route('cart.index') }}" class="navigation__link">{{ __('messages.nav_cart') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="about.html" class="navigation__link">{{ __('messages.nav_about') }}</a>
+              <a href="{{ route('pages.about') }}" class="navigation__link">{{ __('messages.nav_about') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="contact.html" class="navigation__link">{{ __('messages.nav_contact') }}</a>
+              <a href="{{ route('pages.contact') }}" class="navigation__link">{{ __('messages.nav_contact') }}</a>
             </li>
           </ul>
         </div>
@@ -470,7 +470,7 @@ body {
       <a href="{{ route('cart.index') }}" class="navigation__link">{{ __('messages.nav_cart') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="shop.html" class="navigation__link">{{ __('messages.nav_about') }}</a>
+      <a href="{{ route('pages.about') }}" class="navigation__link">{{ __('messages.nav_about') }}</a>
     </li>
     <li class="navigation__item">
       <a href="contact.html" class="navigation__link">{{ __('messages.nav_contact') }}</a>
@@ -644,11 +644,9 @@ body {
         <div class="footer-column footer-menu mb-4 mb-lg-0">
           <h6 class="sub-menu__title text-uppercase">Company</h6>
           <ul class="sub-menu__list list-unstyled">
-            <li class="sub-menu__item"><a href="about-2.html" class="menu-link menu-link_us-s">About Us</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Careers</a></li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Affiliates</a></li>
-            <li class="sub-menu__item"><a href="blog_list1.html" class="menu-link menu-link_us-s">Blog</a></li>
-            <li class="sub-menu__item"><a href="contact-2.html" class="menu-link menu-link_us-s">Contact Us</a></li>
+            <li class="sub-menu__item"><a href="{{ route('pages.about') }}" class="menu-link menu-link_us-s">{{ __('messages.nav_about') }}</a></li>
+            <li class="sub-menu__item"><a href="{{ route('pages.faq') }}" class="menu-link menu-link_us-s">FAQ</a></li>
+            <li class="sub-menu__item"><a href="{{ route('pages.contact') }}" class="menu-link menu-link_us-s">{{ __('messages.nav_contact') }}</a></li>
           </ul>
         </div>
 

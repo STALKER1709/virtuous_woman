@@ -63,4 +63,28 @@ return [
     'footer_cookie_policy' => 'Politique de cookies',
 
     'lang_switch' => 'Langue',
+
+    'about_title' => 'À propos de nous',
+    'about_intro' => 'Virtuous Woman est une marque de mode textile inspirée par l\'élégance et la culture africaine, pensée pour les femmes d\'aujourd\'hui en Europe.',
+    'about_mission' => 'Notre mission : proposer des vêtements et accessoires de qualité, fabriqués avec soin, et accessibles partout en France et en Europe.',
+
+    'faq_title' => 'Questions fréquentes',
+    'faq_q1' => 'Quels sont les délais de livraison ?',
+    'faq_a1' => 'En France, comptez 2 à 4 jours ouvrés. Pour le reste de l\'Union Européenne, comptez 4 à 7 jours ouvrés.',
+    'faq_q2' => 'Quels moyens de paiement acceptez-vous ?',
+    'faq_a2' => 'Nous acceptons le paiement à la livraison, le virement bancaire, et la carte bancaire via Stripe (lorsque disponible).',
+    'faq_q3' => 'Puis-je retourner un article ?',
+    'faq_a3' => 'Oui, vous disposez de 14 jours après réception pour exercer votre droit de rétractation. Consultez nos CGV pour la procédure complète.',
+    'faq_q4' => 'Comment suivre ma commande ?',
+    'faq_a4' => 'Vous pouvez suivre l\'état de votre commande depuis votre espace "Mes commandes" une fois connecté.',
+    'faq_q5' => 'Comment vous contacter ?',
+    'faq_a5' => 'Utilisez notre formulaire de contact ou écrivez-nous à l\'adresse indiquée en bas de page.',
+
+    'contact_title' => 'Contactez-nous',
+    'contact_name' => 'Nom',
+    'contact_email' => 'Email',
+    'contact_subject' => 'Sujet',
+    'contact_message' => 'Message',
+    'contact_send' => 'Envoyer',
+    'contact_success' => 'Votre message a bien été envoyé, nous reviendrons vers vous rapidement.',
 ];
