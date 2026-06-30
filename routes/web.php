@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\LegalController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,9 @@ Route::middleware(['auth'])->group(function(){
     //review routes
     Route::post('/review/store', [ReviewController::class,'store'])->middleware('throttle:5,1')->name('review.store');
 });
+
+//Stripe webhook (Stripe sends no CSRF token; signature is verified in the controller instead)
+Route::post('/stripe/webhook', [StripeWebhookController::class,'handle'])->name('stripe.webhook');
 
 //locale switch
 Route::get('/locale/{locale}', function (string $locale) {

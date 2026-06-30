@@ -17,4 +17,15 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function markPaid(): void
+    {
+        $this->payment_status = 'paid';
+
+        if ($this->status === 'pending') {
+            $this->status = 'processing';
+        }
+
+        $this->save();
+    }
 }

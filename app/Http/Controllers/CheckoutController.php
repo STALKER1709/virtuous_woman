@@ -84,9 +84,13 @@ class CheckoutController extends Controller
             'zip' => 'required|string|max:20',
             'country' => 'required|string|max:255',
             'notes' => 'nullable|string|max:1000',
-            'payment_method' => 'required|in:cod,bank_transfer',
+            'payment_method' => 'required|in:cod,bank_transfer,stripe',
             'terms' => 'required|accepted',
         ]);
+
+        if ($request->payment_method === 'stripe' && ! config('services.stripe.secret')) {
+            return back()->withErrors(['payment_method' => 'Card payment is not available yet.'])->withInput();
+        }
 
         try {
             $order = DB::transaction(function () use ($request, $items) {
@@ -198,8 +202,50 @@ class CheckoutController extends Controller
             Mail::to($adminEmails->all())->send(new NewOrderAdmin($order));
         }
 
+        if ($order->payment_method === 'stripe') {
+            return $this->redirectToStripeCheckout($order);
+        }
+
         return redirect()->route('checkout.confirmation', $order->order_number)
             ->with('success', 'Your order has been placed successfully.');
+    }
+
+    private function redirectToStripeCheckout(Order $order)
+    {
+        \Stripe\Stripe::setApiKey(config('services.stripe.secret'));
+
+        $lineItems = $order->items->map(fn ($item) => [
+            'price_data' => [
+                'currency' => 'eur',
+                'product_data' => ['name' => $item->name],
+                'unit_amount' => (int) round($item->price * 100),
+            ],
+            'quantity' => $item->quantity,
+        ])->all();
+
+        if ($order->shipping > 0) {
+            $lineItems[] = [
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => ['name' => 'Shipping'],
+                    'unit_amount' => (int) round($order->shipping * 100),
+                ],
+                'quantity' => 1,
+            ];
+        }
+
+        $session = \Stripe\Checkout\Session::create([
+            'mode' => 'payment',
+            'line_items' => $lineItems,
+            'customer_email' => $order->email,
+            'success_url' => route('checkout.confirmation', $order->order_number),
+            'cancel_url' => route('checkout.index'),
+            'metadata' => ['order_number' => $order->order_number],
+        ]);
+
+        $order->update(['stripe_session_id' => $session->id]);
+
+        return redirect()->away($session->url);
     }
 
     public function confirmation($order_number)

@@ -83,8 +83,14 @@
                         </div>
 
                         <h3 class="mb-4 mt-2">{{ __('messages.checkout_payment_method') }}</h3>
+                        @if (config('services.stripe.key'))
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_stripe" value="stripe" {{ old('payment_method') == 'stripe' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="payment_stripe">{{ __('messages.checkout_card') }}</label>
+                            </div>
+                        @endif
                         <div class="form-check mb-3">
-                            <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod" {{ old('payment_method', 'cod') == 'cod' ? 'checked' : '' }}>
+                            <input class="form-check-input" type="radio" name="payment_method" id="payment_cod" value="cod" {{ old('payment_method', config('services.stripe.key') ? '' : 'cod') == 'cod' ? 'checked' : '' }}>
                             <label class="form-check-label" for="payment_cod">{{ __('messages.checkout_cod') }}</label>
                         </div>
                         <div class="form-check mb-4">

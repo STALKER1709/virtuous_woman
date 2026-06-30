@@ -49,6 +49,7 @@ return [
     'checkout_coupon_code' => 'Code promo',
     'checkout_apply_coupon' => 'Appliquer',
     'checkout_payment_method' => 'Moyen de paiement',
+    'checkout_card' => 'Carte bancaire (Stripe)',
     'checkout_cod' => 'Paiement à la livraison',
     'checkout_bank_transfer' => 'Virement bancaire',
     'checkout_accept_terms' => 'J\'ai lu et j\'accepte les <a href=":url" target="_blank">Conditions Générales de Vente</a> *',

@@ -49,6 +49,7 @@ return [
     'checkout_coupon_code' => 'Coupon Code',
     'checkout_apply_coupon' => 'Apply',
     'checkout_payment_method' => 'Payment Method',
+    'checkout_card' => 'Credit/Debit Card (Stripe)',
     'checkout_cod' => 'Cash on Delivery',
     'checkout_bank_transfer' => 'Bank Transfer',
     'checkout_accept_terms' => 'I have read and accept the <a href=":url" target="_blank">Terms and Conditions of Sale</a> *',
