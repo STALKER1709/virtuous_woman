@@ -41,4 +41,8 @@ return [
         'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
     ],
 
+    'analytics' => [
+        'ga_measurement_id' => env('GA_MEASUREMENT_ID'),
+    ],
+
 ];

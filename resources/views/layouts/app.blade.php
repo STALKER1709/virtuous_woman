@@ -824,6 +824,40 @@ body {
     });
   </script>
 
+  @if (config('services.analytics.ga_measurement_id'))
+    <script>
+      (function () {
+        var gaId = @json(config('services.analytics.ga_measurement_id'));
+        var loaded = false;
+
+        function loadGa() {
+          if (loaded) return;
+          loaded = true;
+          var script = document.createElement('script');
+          script.async = true;
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+          document.head.appendChild(script);
+
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { dataLayer.push(arguments); };
+          gtag('js', new Date());
+          gtag('config', gaId, { anonymize_ip: true });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+          if (window.vwConsent && window.vwConsent.analytics) {
+            loadGa();
+          }
+        });
+        document.addEventListener('vw-consent-updated', function (e) {
+          if (e.detail && e.detail.analytics) {
+            loadGa();
+          }
+        });
+      })();
+    </script>
+  @endif
+
   <script src="{{ asset('assets/js/plugins/jquery.min.js') }}"></script>
   <script src="{{asset('assets/js/plugins/bootstrap.bundle.min.js')}}"></script>
   <script src="{{asset('assets/js/plugins/bootstrap-slider.min.js')}}"></script>
