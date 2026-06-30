@@ -104,6 +104,13 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/review/store', [ReviewController::class,'store'])->middleware('throttle:5,1')->name('review.store');
 });
 
+//locale switch
+Route::get('/locale/{locale}', function (string $locale) {
+    abort_unless(in_array($locale, ['en', 'fr'], true), 404);
+    session(['locale' => $locale]);
+    return redirect()->back();
+})->name('locale.switch');
+
 //legal pages
 Route::get('/mentions-legales', [LegalController::class,'mentionsLegales'])->name('legal.mentions');
 Route::get('/cgv', [LegalController::class,'cgv'])->name('legal.cgv');

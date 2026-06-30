@@ -350,7 +350,7 @@ body {
         <form action="{{ route('shop.index') }}" method="GET" class="search-field position-relative mt-4 mb-3">
           <div class="position-relative">
             <input class="search-field__input w-100 border rounded-1" type="text" name="q"
-              placeholder="Search products" />
+              placeholder="{{ __('messages.nav_search_placeholder') }}" />
             <button class="btn-icon search-popup__submit pb-0 me-2" type="submit">
               <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -370,19 +370,19 @@ body {
         <div class="overflow-hidden">
           <ul class="navigation__list list-unstyled position-relative">
             <li class="navigation__item">
-              <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
+              <a href="{{ route('home.index') }}" class="navigation__link">{{ __('messages.nav_home') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
+              <a href="{{ route('shop.index') }}" class="navigation__link">{{ __('messages.nav_shop') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="{{ route('cart.index') }}" class="navigation__link">Cart</a>
+              <a href="{{ route('cart.index') }}" class="navigation__link">{{ __('messages.nav_cart') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="about.html" class="navigation__link">About</a>
+              <a href="about.html" class="navigation__link">{{ __('messages.nav_about') }}</a>
             </li>
             <li class="navigation__item">
-              <a href="contact.html" class="navigation__link">Contact</a>
+              <a href="contact.html" class="navigation__link">{{ __('messages.nav_contact') }}</a>
             </li>
           </ul>
         </div>
@@ -394,7 +394,7 @@ body {
             xmlns="http://www.w3.org/2000/svg">
             <use href="#icon_user" />
           </svg>
-          <span class="d-inline-block ms-2 text-uppercase align-middle fw-medium">My Account</span>
+          <span class="d-inline-block ms-2 text-uppercase align-middle fw-medium">{{ __('messages.nav_my_account') }}</span>
         </div>
 
 
@@ -461,19 +461,19 @@ body {
 <nav class="navigation">
   <ul class="navigation__list list-unstyled d-flex">
     <li class="navigation__item">
-      <a href="{{ route('home.index') }}" class="navigation__link">Home</a>
+      <a href="{{ route('home.index') }}" class="navigation__link">{{ __('messages.nav_home') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="{{ route('shop.index') }}" class="navigation__link">Shop</a>
+      <a href="{{ route('shop.index') }}" class="navigation__link">{{ __('messages.nav_shop') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="{{ route('cart.index') }}" class="navigation__link">Cart</a>
+      <a href="{{ route('cart.index') }}" class="navigation__link">{{ __('messages.nav_cart') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="shop.html" class="navigation__link">About</a>
+      <a href="shop.html" class="navigation__link">{{ __('messages.nav_about') }}</a>
     </li>
     <li class="navigation__item">
-      <a href="contact.html" class="navigation__link">Contact</a>
+      <a href="contact.html" class="navigation__link">{{ __('messages.nav_contact') }}</a>
     </li>
   </ul>
 </nav>
@@ -495,7 +495,7 @@ body {
                 <p class="text-uppercase text-secondary fw-medium mb-4">What are you looking for?</p>
                 <div class="position-relative">
                   <input class="search-field__input search-popup__input w-100 fw-medium" type="text"
-                    name="q" placeholder="Search products" />
+                    name="q" placeholder="{{ __('messages.nav_search_placeholder') }}" />
                   <button class="btn-icon search-popup__submit" type="submit">
                     <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
                       xmlns="http://www.w3.org/2000/svg">
@@ -526,8 +526,14 @@ body {
           </div>
 
 
+          <div class="header-tools__item hover-container">
+            <a href="{{ route('locale.switch', app()->getLocale() === 'fr' ? 'en' : 'fr') }}" class="header-tools__item text-uppercase fw-medium" title="{{ __('messages.lang_switch') }}">
+              {{ app()->getLocale() === 'fr' ? 'EN' : 'FR' }}
+            </a>
+          </div>
+
           @guest
-            
+
           <div class="header-tools__item hover-container">
             <a href="{{ route('login') }}" class="header-tools__item">
               <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none"
@@ -661,11 +667,11 @@ body {
           <h6 class="sub-menu__title text-uppercase">Help</h6>
           <ul class="sub-menu__list list-unstyled">
             <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Customer Service</a></li>
-            <li class="sub-menu__item"><a href="account_dashboard.html" class="menu-link menu-link_us-s">My Account</a>
+            <li class="sub-menu__item"><a href="account_dashboard.html" class="menu-link menu-link_us-s">{{ __('messages.nav_my_account') }}</a>
             </li>
             <li class="sub-menu__item"><a href="store_location.html" class="menu-link menu-link_us-s">Find a Store</a>
             </li>
-            <li class="sub-menu__item"><a href="{{ route('legal.confidentialite') }}" class="menu-link menu-link_us-s">Legal & Privacy</a></li>
+            <li class="sub-menu__item"><a href="{{ route('legal.confidentialite') }}" class="menu-link menu-link_us-s">{{ __('messages.footer_legal_privacy') }}</a></li>
             <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Gift Card</a></li>
           </ul>
         </div>
@@ -687,8 +693,7 @@ body {
       <div class="container d-md-flex align-items-center">
         <span class="footer-copyright me-auto">©2024 Surfside Media</span>
         <div class="footer-settings d-md-flex align-items-center">
-          <a href="{{ route('legal.confidentialite') }}">Privacy Policy</a> &nbsp;|&nbsp; <a href="{{ route('legal.cgv') }}">Terms &amp;
-            Conditions</a> &nbsp;|&nbsp; <a href="{{ route('legal.mentions') }}">Legal Notice</a> &nbsp;|&nbsp; <a href="{{ route('legal.cookies') }}">Cookie Policy</a>
+          <a href="{{ route('legal.confidentialite') }}">{{ __('messages.footer_privacy_policy') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cgv') }}">{{ __('messages.footer_terms') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.mentions') }}">{{ __('messages.footer_legal_notice') }}</a> &nbsp;|&nbsp; <a href="{{ route('legal.cookies') }}">{{ __('messages.footer_cookie_policy') }}</a>
         </div>
       </div>
     </div>
@@ -726,7 +731,7 @@ body {
             </svg>
             <span class="wishlist-amount d-block position-absolute js-wishlist-count">3</span>
           </div>
-          <span>Wishlist</span>
+          <span>{{ __('messages.nav_wishlist') }}</span>
         </a>
       </div>
     </div>

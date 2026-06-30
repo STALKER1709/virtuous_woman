@@ -3,7 +3,7 @@
     <main class="pt-90">
         <div class="mb-4 pb-4"></div>
         <section class="shop-checkout container">
-            <h2 class="page-title">Cart</h2>
+            <h2 class="page-title">{{ __('messages.cart_title') }}</h2>
             <div class="checkout-steps">
                 <a href="javascript:void(0)" class="checkout-steps__item active">
                     <span class="checkout-steps__item-number">01</span>
@@ -36,11 +36,11 @@
                     <table class="cart-table">
                         <thead>
                             <tr>
-                                <th>Product</th>
+                                <th>{{ __('messages.cart_product') }}</th>
                                 <th></th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th>
+                                <th>{{ __('messages.cart_price') }}</th>
+                                <th>{{ __('messages.cart_quantity') }}</th>
+                                <th>{{ __('messages.cart_subtotal') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -127,11 +127,11 @@
                             <table class="cart-totals">
                                 <tbody>
                                     <tr>
-                                        <th>Subtotal</th>
+                                        <th>{{ __('messages.cart_subtotal') }}</th>
                                         <td>{{ Cart::instance('cart')->subtotal() }}</td>
                                     </tr>
                                     <tr>
-                                        <th>Shipping</th>
+                                        <th>{{ __('messages.checkout_shipping') }}</th>
                                         <td>
                                             Free
                                         </td>
@@ -141,7 +141,7 @@
                                         <td>{{ Cart::instance('cart')->tax() }}€</td>
                                     </tr>
                                     <tr>
-                                        <th>Total</th>
+                                        <th>{{ __('messages.cart_total') }}</th>
                                         <td>{{ Cart::instance('cart')->total() }}€</td>
                                     </tr>
                                 </tbody>
@@ -149,7 +149,7 @@
                         </div>
                         <div class="mobile_fixed-btn_wrapper">
                             <div class="button-wrapper container">
-                                <a href="{{ auth()->check() ? route('checkout.index') : route('login') }}" class="btn btn-primary btn-checkout">PROCEED TO CHECKOUT</a>
+                                <a href="{{ auth()->check() ? route('checkout.index') : route('login') }}" class="btn btn-primary btn-checkout">{{ __('messages.cart_proceed_checkout') }}</a>
                             </div>
                         </div>
                     </div>
@@ -157,8 +157,8 @@
                 @else
                 <div class="row">
                     <div class="col-md-12 text-center pt-5 bp-5">
-                        <p>Your cart is currently empty.</p>
-                        <a href="{{ route('shop.index') }}" class="btn btn-primary mt-3">Return to Shop</a>
+                        <p>{{ __('messages.cart_empty') }}</p>
+                        <a href="{{ route('shop.index') }}" class="btn btn-primary mt-3">{{ __('messages.cart_continue_shopping') }}</a>
                     </div>
                 </div>
                 @endif

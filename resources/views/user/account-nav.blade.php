@@ -1,17 +1,17 @@
           <ul class="account-nav">
-            <li><a href="{{route('user.index')}}" class="menu-link menu-link_us-s {{ request()->routeIs('user.index') ? 'active' : '' }}">Dashboard</a></li>
-            <li><a href="{{ route('user.orders') }}" class="menu-link menu-link_us-s {{ request()->routeIs('user.orders') || request()->routeIs('user.order.details') ? 'active' : '' }}">My Orders</a></li>
-            <li><a href="account-address.html" class="menu-link menu-link_us-s">Addresses</a></li>
-            <li><a href="account-details.html" class="menu-link menu-link_us-s">Account Details</a></li>
-            <li><a href="{{ route('wishlist.index') }}" class="menu-link menu-link_us-s {{ request()->routeIs('wishlist.index') ? 'active' : '' }}">Wishlist</a></li>
-            <li><a href="{{ route('user.export-data') }}" class="menu-link menu-link_us-s">Download My Data</a></li>
+            <li><a href="{{route('user.index')}}" class="menu-link menu-link_us-s {{ request()->routeIs('user.index') ? 'active' : '' }}">{{ __('messages.account_dashboard') }}</a></li>
+            <li><a href="{{ route('user.orders') }}" class="menu-link menu-link_us-s {{ request()->routeIs('user.orders') || request()->routeIs('user.order.details') ? 'active' : '' }}">{{ __('messages.account_orders') }}</a></li>
+            <li><a href="account-address.html" class="menu-link menu-link_us-s">{{ __('messages.account_addresses') }}</a></li>
+            <li><a href="account-details.html" class="menu-link menu-link_us-s">{{ __('messages.account_details') }}</a></li>
+            <li><a href="{{ route('wishlist.index') }}" class="menu-link menu-link_us-s {{ request()->routeIs('wishlist.index') ? 'active' : '' }}">{{ __('messages.account_wishlist') }}</a></li>
+            <li><a href="{{ route('user.export-data') }}" class="menu-link menu-link_us-s">{{ __('messages.account_download_data') }}</a></li>
             <li>
-              <a href="#deleteAccountModal" data-bs-toggle="modal" class="menu-link menu-link_us-s text-danger">Delete My Account</a>
+              <a href="#deleteAccountModal" data-bs-toggle="modal" class="menu-link menu-link_us-s text-danger">{{ __('messages.account_delete') }}</a>
             </li>
             <li>
             <form method="POST" action="{{ route('logout') }}" id="logout-form">
                 @csrf
-            <a href="{{ route('logout') }}" class="menu-link menu-link_us-s" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Logout</a>
+            <a href="{{ route('logout') }}" class="menu-link menu-link_us-s" onclick="event.preventDefault();document.getElementById('logout-form').submit();">{{ __('messages.account_logout') }}</a>
             </form>
             </li>
           </ul>
