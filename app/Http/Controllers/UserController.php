@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Review;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,5 +31,35 @@ class UserController extends Controller
             ->firstOrFail();
 
         return view('user.order-details', compact('order'));
+    }
+
+    public function exportData()
+    {
+        $user = Auth::user();
+
+        $data = [
+            'account' => $user->only(['name', 'email', 'mobile', 'created_at']),
+            'orders' => Order::with('items')->where('user_id', $user->id)->get()->toArray(),
+            'wishlist' => Wishlist::with('product')->where('user_id', $user->id)->get()->toArray(),
+            'reviews' => Review::where('user_id', $user->id)->get()->toArray(),
+        ];
+
+        $fileName = 'virtuous-woman-data-export-'.now()->format('Ymd-His').'.json';
+
+        return response()->json($data)->header('Content-Disposition', 'attachment; filename="'.$fileName.'"');
+    }
+
+    public function deleteAccount(Request $request)
+    {
+        $request->validate(['password' => 'required|current_password']);
+
+        $user = Auth::user();
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home.index')->with('success', 'Your account and personal data have been deleted.');
     }
 }

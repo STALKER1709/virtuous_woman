@@ -145,6 +145,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                <p class="small text-secondary mt-2">Prices include 20% VAT: {{ number_format($vatAmount, 2) }}&euro; VAT.</p>
                                 <button type="submit" class="btn btn-primary w-100 mt-4">PLACE ORDER</button>
                             </div>
                         </div>

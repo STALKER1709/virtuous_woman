@@ -665,7 +665,7 @@ body {
             </li>
             <li class="sub-menu__item"><a href="store_location.html" class="menu-link menu-link_us-s">Find a Store</a>
             </li>
-            <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Legal & Privacy</a></li>
+            <li class="sub-menu__item"><a href="{{ route('legal.confidentialite') }}" class="menu-link menu-link_us-s">Legal & Privacy</a></li>
             <li class="sub-menu__item"><a href="#" class="menu-link menu-link_us-s">Gift Card</a></li>
           </ul>
         </div>
@@ -687,8 +687,8 @@ body {
       <div class="container d-md-flex align-items-center">
         <span class="footer-copyright me-auto">©2024 Surfside Media</span>
         <div class="footer-settings d-md-flex align-items-center">
-          <a href="privacy-policy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="terms-conditions.html">Terms &amp;
-            Conditions</a>
+          <a href="{{ route('legal.confidentialite') }}">Privacy Policy</a> &nbsp;|&nbsp; <a href="{{ route('legal.cgv') }}">Terms &amp;
+            Conditions</a> &nbsp;|&nbsp; <a href="{{ route('legal.mentions') }}">Legal Notice</a> &nbsp;|&nbsp; <a href="{{ route('legal.cookies') }}">Cookie Policy</a>
         </div>
       </div>
     </div>
@@ -737,7 +737,7 @@ body {
 
   <div id="cookieConsent" class="position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 d-none" style="z-index: 2000;">
     <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
-      <p class="mb-0 small">We use cookies to improve your experience on Virtuous Woman and to remember your cart and preferences. By continuing to browse, you accept our use of cookies.</p>
+      <p class="mb-0 small">We use cookies to improve your experience on Virtuous Woman and to remember your cart and preferences. Read our <a href="{{ route('legal.cookies') }}" class="text-white text-decoration-underline">Cookie Policy</a>.</p>
       <button type="button" id="cookieConsentAccept" class="btn btn-primary btn-sm text-uppercase text-nowrap">Accept</button>
     </div>
   </div>

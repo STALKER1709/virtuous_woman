@@ -8,6 +8,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\LegalController;
 use App\Http\Middleware\AuthAdmin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -91,6 +92,10 @@ Route::middleware(['auth'])->group(function(){
     Route::post('/checkout/coupon', [CheckoutController::class,'applyCoupon'])->name('checkout.coupon.apply');
     Route::delete('/checkout/coupon', [CheckoutController::class,'removeCoupon'])->name('checkout.coupon.remove');
 
+    //gdpr routes
+    Route::get('/account/export-data', [UserController::class,'exportData'])->name('user.export-data');
+    Route::delete('/account/delete', [UserController::class,'deleteAccount'])->name('user.delete-account');
+
     //wishlist routes
     Route::get('/account-wishlist', [WishlistController::class,'index'])->name('wishlist.index');
     Route::post('/wishlist/toggle', [WishlistController::class,'toggle'])->name('wishlist.toggle');
@@ -98,3 +103,9 @@ Route::middleware(['auth'])->group(function(){
     //review routes
     Route::post('/review/store', [ReviewController::class,'store'])->middleware('throttle:5,1')->name('review.store');
 });
+
+//legal pages
+Route::get('/mentions-legales', [LegalController::class,'mentionsLegales'])->name('legal.mentions');
+Route::get('/cgv', [LegalController::class,'cgv'])->name('legal.cgv');
+Route::get('/politique-de-confidentialite', [LegalController::class,'confidentialite'])->name('legal.confidentialite');
+Route::get('/politique-de-cookies', [LegalController::class,'cookies'])->name('legal.cookies');

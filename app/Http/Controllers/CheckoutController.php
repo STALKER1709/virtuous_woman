@@ -21,6 +21,7 @@ class CheckoutController extends Controller
 {
     private const FREE_SHIPPING_THRESHOLD = 75.0;
     private const FLAT_SHIPPING_RATE = 4.99;
+    private const VAT_RATE = 20.0; // French standard VAT rate. All displayed prices are VAT-inclusive.
 
     public function index(Request $request)
     {
@@ -35,8 +36,9 @@ class CheckoutController extends Controller
         $coupon = $this->sessionCoupon();
         $discount = $this->discountFor($coupon, $subtotal);
         $total = max(0, $subtotal + $shipping - $discount);
+        $vatAmount = $this->vatAmount($total);
 
-        return view('checkout', compact('items', 'subtotal', 'shipping', 'discount', 'coupon', 'total'));
+        return view('checkout', compact('items', 'subtotal', 'shipping', 'discount', 'coupon', 'total', 'vatAmount'));
     }
 
     public function applyCoupon(Request $request)
@@ -103,6 +105,7 @@ class CheckoutController extends Controller
                 $coupon = $this->sessionCoupon();
                 $discount = $this->discountFor($coupon, $subtotal);
                 $total = max(0, $subtotal + $shipping - $discount);
+                $vatAmount = $this->vatAmount($total);
 
                 $order = Order::create([
                     'order_number' => 'VW-'.now()->format('ymd').'-'.strtoupper(Str::random(6)),
@@ -121,6 +124,8 @@ class CheckoutController extends Controller
                     'discount' => $discount,
                     'coupon_code' => $coupon?->code,
                     'total' => $total,
+                    'vat_rate' => self::VAT_RATE,
+                    'vat_amount' => $vatAmount,
                     'payment_method' => $request->payment_method,
                     'status' => 'pending',
                 ]);
@@ -178,6 +183,11 @@ class CheckoutController extends Controller
     private function shippingFee(float $subtotal): float
     {
         return $subtotal >= self::FREE_SHIPPING_THRESHOLD ? 0.0 : self::FLAT_SHIPPING_RATE;
+    }
+
+    private function vatAmount(float $vatInclusiveTotal): float
+    {
+        return round($vatInclusiveTotal - ($vatInclusiveTotal / (1 + self::VAT_RATE / 100)), 2);
     }
 
     private function sessionCoupon(): ?Coupon

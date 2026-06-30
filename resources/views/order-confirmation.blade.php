@@ -74,13 +74,23 @@
                                         <th>Subtotal</th>
                                         <td>{{ number_format($order->subtotal, 2) }}&euro;</td>
                                     </tr>
+                                    @if ($order->discount > 0)
+                                        <tr>
+                                            <th>Discount @if ($order->coupon_code)({{ $order->coupon_code }})@endif</th>
+                                            <td>-{{ number_format($order->discount, 2) }}&euro;</td>
+                                        </tr>
+                                    @endif
                                     <tr>
                                         <th>Shipping</th>
-                                        <td>Free</td>
+                                        <td>{{ $order->shipping > 0 ? number_format($order->shipping, 2).'€' : 'Free' }}</td>
                                     </tr>
                                     <tr>
                                         <th>Total</th>
                                         <td>{{ number_format($order->total, 2) }}&euro;</td>
+                                    </tr>
+                                    <tr>
+                                        <th>incl. VAT ({{ rtrim(rtrim(number_format($order->vat_rate, 2), '0'), '.') }}%)</th>
+                                        <td>{{ number_format($order->vat_amount, 2) }}&euro;</td>
                                     </tr>
                                     <tr>
                                         <th>Payment Method</th>

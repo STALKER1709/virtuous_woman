@@ -12,8 +12,11 @@ Your order **{{ $order->order_number }}** has been placed successfully and is no
 </x-mail::table>
 
 **Subtotal:** {{ number_format($order->subtotal, 2) }}€
-**Shipping:** {{ number_format($order->shipping, 2) }}€
-**Total:** {{ number_format($order->total, 2) }}€
+@if ($order->discount > 0)
+**Discount:** -{{ number_format($order->discount, 2) }}€
+@endif
+**Shipping:** {{ $order->shipping > 0 ? number_format($order->shipping, 2).'€' : 'Free' }}
+**Total:** {{ number_format($order->total, 2) }}€ (incl. {{ number_format($order->vat_amount, 2) }}€ VAT)
 
 Shipping to: {{ $order->address }}, {{ $order->city }}{{ $order->state ? ', '.$order->state : '' }} {{ $order->zip }}, {{ $order->country }}
 
