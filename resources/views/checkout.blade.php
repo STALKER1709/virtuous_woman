@@ -91,6 +91,11 @@
                             <input class="form-check-input" type="radio" name="payment_method" id="payment_bank" value="bank_transfer" {{ old('payment_method') == 'bank_transfer' ? 'checked' : '' }}>
                             <label class="form-check-label" for="payment_bank">{{ __('messages.checkout_bank_transfer') }}</label>
                         </div>
+
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" name="terms" id="terms" value="1" {{ old('terms') ? 'checked' : '' }} required>
+                            <label class="form-check-label" for="terms">{!! __('messages.checkout_accept_terms', ['url' => route('legal.cgv')]) !!}</label>
+                        </div>
                     </div>
 
                     <div class="col-lg-5">

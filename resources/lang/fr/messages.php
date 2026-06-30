@@ -51,6 +51,7 @@ return [
     'checkout_payment_method' => 'Moyen de paiement',
     'checkout_cod' => 'Paiement à la livraison',
     'checkout_bank_transfer' => 'Virement bancaire',
+    'checkout_accept_terms' => 'J\'ai lu et j\'accepte les <a href=":url" target="_blank">Conditions Générales de Vente</a> *',
     'checkout_place_order' => 'Valider la commande',
     'checkout_vat_note' => 'Les prix incluent la TVA à :rate % : :amount de TVA.',
 

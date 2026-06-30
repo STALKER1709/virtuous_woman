@@ -20,7 +20,8 @@ use Surfsidemedia\Shoppingcart\Facades\Cart;
 class CheckoutController extends Controller
 {
     private const FREE_SHIPPING_THRESHOLD = 75.0;
-    private const FLAT_SHIPPING_RATE = 4.99;
+    private const FRANCE_SHIPPING_RATE = 4.99;
+    private const EU_SHIPPING_RATE = 9.99;
     private const VAT_RATE = 20.0; // French standard VAT rate. All displayed prices are VAT-inclusive.
 
     public function index(Request $request)
@@ -32,13 +33,14 @@ class CheckoutController extends Controller
         }
 
         $subtotal = (float) Cart::instance('cart')->subtotal(2, '.', '');
-        $shipping = $this->shippingFee($subtotal);
+        $country = old('country', auth()->user()->country ?? 'France');
+        $shipping = $this->shippingFee($subtotal, $country);
         $coupon = $this->sessionCoupon();
         $discount = $this->discountFor($coupon, $subtotal);
         $total = max(0, $subtotal + $shipping - $discount);
         $vatAmount = $this->vatAmount($total);
 
-        return view('checkout', compact('items', 'subtotal', 'shipping', 'discount', 'coupon', 'total', 'vatAmount'));
+        return view('checkout', compact('items', 'subtotal', 'shipping', 'discount', 'coupon', 'total', 'vatAmount', 'country'));
     }
 
     public function applyCoupon(Request $request)
@@ -82,6 +84,7 @@ class CheckoutController extends Controller
             'country' => 'required|string|max:255',
             'notes' => 'nullable|string|max:1000',
             'payment_method' => 'required|in:cod,bank_transfer',
+            'terms' => 'required|accepted',
         ]);
 
         try {
@@ -101,7 +104,7 @@ class CheckoutController extends Controller
                 }
 
                 $subtotal = (float) Cart::instance('cart')->subtotal(2, '.', '');
-                $shipping = $this->shippingFee($subtotal);
+                $shipping = $this->shippingFee($subtotal, $request->country);
                 $coupon = $this->sessionCoupon();
                 $discount = $this->discountFor($coupon, $subtotal);
                 $total = max(0, $subtotal + $shipping - $discount);
@@ -180,9 +183,13 @@ class CheckoutController extends Controller
         return view('order-confirmation', compact('order'));
     }
 
-    private function shippingFee(float $subtotal): float
+    private function shippingFee(float $subtotal, ?string $country): float
     {
-        return $subtotal >= self::FREE_SHIPPING_THRESHOLD ? 0.0 : self::FLAT_SHIPPING_RATE;
+        if ($subtotal >= self::FREE_SHIPPING_THRESHOLD) {
+            return 0.0;
+        }
+
+        return $country === 'France' ? self::FRANCE_SHIPPING_RATE : self::EU_SHIPPING_RATE;
     }
 
     private function vatAmount(float $vatInclusiveTotal): float
