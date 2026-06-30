@@ -19,6 +19,13 @@ return [
     'account_wishlist' => 'Liste de souhaits',
     'account_download_data' => 'Télécharger mes données',
     'account_download_invoice' => 'Télécharger la facture',
+
+    'return_title' => 'Retour / Remboursement',
+    'return_status_label' => 'Statut du retour',
+    'return_reason_placeholder' => 'Dites-nous pourquoi vous souhaitez retourner cette commande',
+    'return_request_button' => 'Demander un retour',
+    'return_request_success' => 'Votre demande de retour a été envoyée. Nous reviendrons vers vous rapidement.',
+    'return_window_closed' => 'Le délai de retour pour cette commande est écoulé.',
     'account_delete' => 'Supprimer mon compte',
     'account_logout' => 'Déconnexion',
 

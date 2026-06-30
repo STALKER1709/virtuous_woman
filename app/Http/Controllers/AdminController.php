@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderStatusUpdated;
+use App\Mail\ReturnStatusUpdated;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderReturn;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\Review;
@@ -488,6 +490,39 @@ class AdminController extends Controller
         Mail::to($order->email)->send(new OrderStatusUpdated($order));
 
         return redirect()->route('admin.order.details', $id)->with('status', 'Order status updated successfully.');
+    }
+
+    // Returns section
+
+    public function returns()
+    {
+        $returns = OrderReturn::with(['order', 'user'])->orderBy('created_at', 'DESC')->paginate(10);
+
+        return view('admin.returns', compact('returns'));
+    }
+
+    public function return_details($id)
+    {
+        $return = OrderReturn::with(['order.items', 'user'])->findOrFail($id);
+
+        return view('admin.return-details', compact('return'));
+    }
+
+    public function return_update_status(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:requested,approved,rejected,refunded',
+            'admin_notes' => 'nullable|string|max:2000',
+        ]);
+
+        $return = OrderReturn::with('order')->findOrFail($id);
+        $return->status = $request->status;
+        $return->admin_notes = $request->admin_notes;
+        $return->save();
+
+        Mail::to($return->user->email)->send(new ReturnStatusUpdated($return));
+
+        return redirect()->route('admin.return.details', $id)->with('status', 'Return status updated successfully.');
     }
 
     // Coupons section

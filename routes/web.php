@@ -79,6 +79,11 @@ Route::middleware(['auth', AuthAdmin::class])->group(function(){
 
     //reviews moderation
     Route::delete('/admin/review/{id}/delete', [AdminController::class,'review_delete'])->name('admin.review.delete');
+
+    //returns routes
+    Route::get('/admin/returns', [AdminController::class,'returns'])->name('admin.returns');
+    Route::get('/admin/return/{id}', [AdminController::class,'return_details'])->name('admin.return.details');
+    Route::put('/admin/return/{id}/status', [AdminController::class,'return_update_status'])->name('admin.return.status.update');
 });
 
 
@@ -89,6 +94,7 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/account-orders', [UserController::class,'orders'])->name('user.orders');
     Route::get('/account-orders/{order_number}', [UserController::class,'order_details'])->name('user.order.details');
     Route::get('/account-orders/{order_number}/invoice', [UserController::class,'order_invoice'])->name('user.order.invoice');
+    Route::post('/account-orders/{order_number}/return', [UserController::class,'returnRequest'])->middleware('throttle:5,1')->name('user.order.return');
 
     //checkout routes
     Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');

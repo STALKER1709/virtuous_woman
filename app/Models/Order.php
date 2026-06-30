@@ -18,6 +18,11 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    public function orderReturn()
+    {
+        return $this->hasOne(OrderReturn::class);
+    }
+
     public function markPaid(): void
     {
         $this->payment_status = 'paid';

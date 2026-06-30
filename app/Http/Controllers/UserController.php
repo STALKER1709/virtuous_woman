@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewReturnAdmin;
 use App\Models\Order;
+use App\Models\OrderReturn;
 use App\Models\Review;
+use App\Models\User;
 use App\Models\Wishlist;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -27,7 +31,7 @@ class UserController extends Controller
 
     public function order_details($order_number)
     {
-        $order = Order::with('items')->where('order_number', $order_number)
+        $order = Order::with(['items', 'orderReturn'])->where('order_number', $order_number)
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
@@ -43,6 +47,35 @@ class UserController extends Controller
         $pdf = Pdf::loadView('invoices.order', compact('order'));
 
         return $pdf->download('invoice-'.$order->order_number.'.pdf');
+    }
+
+    public function returnRequest(Request $request, $order_number)
+    {
+        $order = Order::with('items')->where('order_number', $order_number)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        abort_unless($order->status === 'delivered', 403);
+        abort_unless($order->updated_at->diffInDays(now()) <= 14, 403);
+        abort_if($order->orderReturn()->exists(), 403);
+
+        $request->validate([
+            'reason' => 'required|string|max:2000',
+        ]);
+
+        $return = OrderReturn::create([
+            'order_id' => $order->id,
+            'user_id' => Auth::id(),
+            'reason' => $request->reason,
+            'status' => 'requested',
+        ]);
+
+        $adminEmails = User::where('utype', 'ADM')->pluck('email');
+        $recipients = $adminEmails->isNotEmpty() ? $adminEmails->all() : [config('mail.from.address')];
+        Mail::to($recipients)->send(new NewReturnAdmin($return));
+
+        return redirect()->route('user.order.details', $order->order_number)
+            ->with('success', __('messages.return_request_success'));
     }
 
     public function exportData()

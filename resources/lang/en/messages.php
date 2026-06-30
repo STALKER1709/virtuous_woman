@@ -19,6 +19,13 @@ return [
     'account_wishlist' => 'Wishlist',
     'account_download_data' => 'Download My Data',
     'account_download_invoice' => 'Download Invoice',
+
+    'return_title' => 'Return / Refund',
+    'return_status_label' => 'Return status',
+    'return_reason_placeholder' => 'Tell us why you want to return this order',
+    'return_request_button' => 'Request a Return',
+    'return_request_success' => 'Your return request has been submitted. We will get back to you shortly.',
+    'return_window_closed' => 'The return window for this order has closed.',
     'account_delete' => 'Delete My Account',
     'account_logout' => 'Logout',
 

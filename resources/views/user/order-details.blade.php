@@ -11,6 +11,12 @@
         </div>
         <div class="col-lg-9">
           <div class="page-content my-account__dashboard">
+            @if (session('success'))
+              <p class="alert alert-success">{{ session('success') }}</p>
+            @endif
+            @if ($errors->any())
+              <p class="alert alert-danger">{{ $errors->first() }}</p>
+            @endif
             <p>
               Placed on {{ $order->created_at->format('Y-m-d H:i') }} &middot;
               Status: <strong>{{ ucfirst($order->status) }}</strong> &middot;
@@ -74,6 +80,32 @@
                 </table>
               </div>
             </div>
+
+            @if ($order->status === 'delivered')
+              <div class="row mt-4">
+                <div class="col-12">
+                  <h5>{{ __('messages.return_title') }}</h5>
+                  @if ($order->orderReturn)
+                    <p class="mb-0">{{ __('messages.return_status_label') }}: <strong>{{ ucfirst($order->orderReturn->status) }}</strong></p>
+                    @if ($order->orderReturn->admin_notes)
+                      <p class="mb-0"><em>{{ $order->orderReturn->admin_notes }}</em></p>
+                    @endif
+                  @elseif ($order->updated_at->diffInDays(now()) <= 14)
+                    <form method="POST" action="{{ route('user.order.return', $order->order_number) }}">
+                      @csrf
+                      <div class="form-label-fixed mb-2">
+                        <textarea name="reason" class="form-control form-control_gray" rows="3" placeholder="{{ __('messages.return_reason_placeholder') }}" required></textarea>
+                      </div>
+                      <button type="submit" class="btn btn-outline-primary-2">
+                        <span>{{ __('messages.return_request_button') }}</span>
+                      </button>
+                    </form>
+                  @else
+                    <p class="mb-0">{{ __('messages.return_window_closed') }}</p>
+                  @endif
+                </div>
+              </div>
+            @endif
           </div>
         </div>
       </div>

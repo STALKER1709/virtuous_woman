@@ -121,6 +121,11 @@
                                                 <div class="text">All Orders</div>
                                             </a>
                                         </li>
+                                        <li class="sub-menu-item">
+                                            <a href="{{ route('admin.returns') }}" class="virtuous-submenu-link">
+                                                <div class="text">Returns</div>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
