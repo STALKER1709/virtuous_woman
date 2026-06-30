@@ -18,6 +18,7 @@ return [
     'account_details' => 'Détails du compte',
     'account_wishlist' => 'Liste de souhaits',
     'account_download_data' => 'Télécharger mes données',
+    'account_download_invoice' => 'Télécharger la facture',
     'account_delete' => 'Supprimer mon compte',
     'account_logout' => 'Déconnexion',
 

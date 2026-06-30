@@ -18,6 +18,7 @@ return [
     'account_details' => 'Account Details',
     'account_wishlist' => 'Wishlist',
     'account_download_data' => 'Download My Data',
+    'account_download_invoice' => 'Download Invoice',
     'account_delete' => 'Delete My Account',
     'account_logout' => 'Logout',
 

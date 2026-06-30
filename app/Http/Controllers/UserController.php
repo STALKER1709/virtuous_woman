@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Review;
 use App\Models\Wishlist;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,6 +32,17 @@ class UserController extends Controller
             ->firstOrFail();
 
         return view('user.order-details', compact('order'));
+    }
+
+    public function order_invoice($order_number)
+    {
+        $order = Order::with('items')->where('order_number', $order_number)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $pdf = Pdf::loadView('invoices.order', compact('order'));
+
+        return $pdf->download('invoice-'.$order->order_number.'.pdf');
     }
 
     public function exportData()

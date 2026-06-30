@@ -17,6 +17,12 @@
               Payment: {{ $order->payment_method === 'cod' ? 'Cash on Delivery' : 'Bank Transfer' }}
             </p>
 
+            <p>
+              <a href="{{ route('user.order.invoice', $order->order_number) }}" class="btn btn-outline-primary-2">
+                <span>{{ __('messages.account_download_invoice') }}</span>
+              </a>
+            </p>
+
             <div class="cart-table__wrapper">
               <table class="cart-table">
                 <thead>
