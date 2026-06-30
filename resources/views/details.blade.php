@@ -128,6 +128,20 @@
                         <form name="addtocart-form" method="post" action="{{ route('cart.add') }}">
                             @csrf
 
+                            @if ($product->variants->isNotEmpty())
+                                <div class="form-label-fixed mb-3">
+                                    <label class="form-label">Size / Color</label>
+                                    <select name="variant_id" class="form-control form-control_gray" required>
+                                        @foreach ($product->variants as $variant)
+                                            <option value="{{ $variant->id }}" {{ $variant->quantity < 1 ? 'disabled' : '' }}>
+                                                {{ trim(($variant->size ?? '').' '.($variant->color ?? '')) }}
+                                                {{ $variant->quantity < 1 ? '(out of stock)' : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+
                             <div class="product-single__addtocart">
                                 <div class="qty-control position-relative">
                                     <input type="number" name="quantity" value="1" min="1"

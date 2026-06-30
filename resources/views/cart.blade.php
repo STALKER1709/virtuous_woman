@@ -58,10 +58,16 @@
                                 <td>
                                     <div class="shopping-cart__product-item__detail">
                                         <h4>{{ $item->name }}</h4>
-                                        <ul class="shopping-cart__product-item__options">
-                                            <li>Color: Yellow</li>
-                                            <li>Size: L</li>
-                                        </ul>
+                                        @if ($item->options->get('size') || $item->options->get('color'))
+                                            <ul class="shopping-cart__product-item__options">
+                                                @if ($item->options->get('color'))
+                                                    <li>Color: {{ $item->options->get('color') }}</li>
+                                                @endif
+                                                @if ($item->options->get('size'))
+                                                    <li>Size: {{ $item->options->get('size') }}</li>
+                                                @endif
+                                            </ul>
+                                        @endif
                                     </div>
                                 </td>
                                 <td>

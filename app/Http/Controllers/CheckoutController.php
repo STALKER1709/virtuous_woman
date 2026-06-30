@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -93,7 +94,24 @@ class CheckoutController extends Controller
                 $productIds = $items->pluck('id')->all();
                 $products = Product::whereIn('id', $productIds)->lockForUpdate()->get()->keyBy('id');
 
+                $variantIds = $items->map(fn ($item) => $item->options->get('variant_id'))->filter()->all();
+                $variants = ProductVariant::whereIn('id', $variantIds)->lockForUpdate()->get()->keyBy('id');
+
                 foreach ($items as $item) {
+                    $variantId = $item->options->get('variant_id');
+
+                    if ($variantId) {
+                        $variant = $variants->get($variantId);
+
+                        if (! $variant || $variant->quantity < $item->qty) {
+                            throw ValidationException::withMessages([
+                                'stock' => 'Sorry, "'.$item->name.'" no longer has enough stock available.',
+                            ]);
+                        }
+
+                        continue;
+                    }
+
                     $product = $products->get($item->id);
 
                     if (! $product || $product->quantity < $item->qty) {
@@ -141,6 +159,16 @@ class CheckoutController extends Controller
                         'price' => $item->price,
                         'quantity' => $item->qty,
                     ]);
+
+                    $variantId = $item->options->get('variant_id');
+
+                    if ($variantId) {
+                        $variant = $variants->get($variantId);
+                        $variant->quantity = max(0, $variant->quantity - $item->qty);
+                        $variant->save();
+
+                        continue;
+                    }
 
                     $product = $products->get($item->id);
                     $remaining = max(0, $product->quantity - $item->qty);

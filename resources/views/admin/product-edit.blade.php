@@ -242,6 +242,41 @@
                 </div>
             </form>
             <!-- /form-add-product -->
+
+            <div class="wg-box mt-4">
+                <h5>Variants (size / color)</h5>
+                <table class="table">
+                    <thead>
+                        <tr><th>Size</th><th>Color</th><th>Stock</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($product->variants as $variant)
+                            <tr>
+                                <td>{{ $variant->size ?? '-' }}</td>
+                                <td>{{ $variant->color ?? '-' }}</td>
+                                <td>{{ $variant->quantity }}</td>
+                                <td>
+                                    <form method="POST" action="{{ route('admin.product.variant.delete', [$product->id, $variant->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="tf-button">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="4">No variants yet.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+
+                <form method="POST" action="{{ route('admin.product.variant.store', $product->id) }}" class="cols gap10 mt-3">
+                    @csrf
+                    <input type="text" name="size" class="form-control" placeholder="Size (e.g. M, L, XL)">
+                    <input type="text" name="color" class="form-control" placeholder="Color (e.g. Red)">
+                    <input type="number" name="quantity" min="0" class="form-control" placeholder="Stock quantity" required>
+                    <button class="tf-button" type="submit">Add variant</button>
+                </form>
+            </div>
         </div>
         <!-- /main-content-wrap -->
     </div>

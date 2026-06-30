@@ -105,7 +105,7 @@
                                 <ul class="list-unstyled mb-4">
                                     @foreach ($items as $item)
                                         <li class="d-flex justify-content-between py-2 border-bottom">
-                                            <span>{{ $item->name }} &times; {{ $item->qty }}</span>
+                                            <span>{{ $item->name }}@if ($item->options->get('size') || $item->options->get('color')) ({{ trim(($item->options->get('size') ?? '').' '.($item->options->get('color') ?? '')) }})@endif &times; {{ $item->qty }}</span>
                                             <span>{{ $item->subtotal }}&euro;</span>
                                         </li>
                                     @endforeach

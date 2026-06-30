@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Review;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -324,10 +325,33 @@ class AdminController extends Controller
     }
 
     public function product_edit($id){
-        $product = Product::find($id);
+        $product = Product::with('variants')->find($id);
         $categories = Category::select('id', 'name')->orderBy('name')->get();
         $brands = Brand::select('id', 'name')->orderBy('name')->get();
         return view('admin.product-edit', compact('product','categories','brands'));
+    }
+
+    public function variant_store(Request $request, $productId){
+        $request->validate([
+            'size' => 'nullable|string|max:50',
+            'color' => 'nullable|string|max:50',
+            'quantity' => 'required|integer|min:0',
+        ]);
+
+        ProductVariant::create([
+            'product_id' => $productId,
+            'size' => $request->size,
+            'color' => $request->color,
+            'quantity' => $request->quantity,
+        ]);
+
+        return redirect()->route('admin.product.edit', $productId)->with('status', 'Variant added.');
+    }
+
+    public function variant_delete($productId, $variantId){
+        ProductVariant::where('product_id', $productId)->where('id', $variantId)->delete();
+
+        return redirect()->route('admin.product.edit', $productId)->with('status', 'Variant removed.');
     }
 
     public function product_update(Request $request){
