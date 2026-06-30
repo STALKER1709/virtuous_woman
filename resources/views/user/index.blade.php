@@ -13,8 +13,8 @@
           <div class="page-content my-account__dashboard">
             <p>Welcome to your <strong>Sisterhood Space</strong> 🌸</p>
             <p>From your empowerment dashboard you can view your <a class="unerline-link" href="{{ route('user.orders') }}">recent
-                orders</a>, manage your <a class="unerline-link" href="account-address.html">shipping
-                addresses</a>, and <a class="unerline-link" href="account-details.html">update your personal information</a>.</p>
+                orders</a>, manage your <a class="unerline-link" href="{{ route('user.address') }}">shipping
+                addresses</a>, and <a class="unerline-link" href="{{ route('user.details') }}">update your personal information</a>.</p>
             <p class="mt-4">Remember, you're part of a community that celebrates <strong>authenticity, style, and empowerment</strong>.
               Every purchase supports our mission to inspire and uplift women worldwide.</p>
 

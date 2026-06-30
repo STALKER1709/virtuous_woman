@@ -78,6 +78,58 @@ class UserController extends Controller
             ->with('success', __('messages.return_request_success'));
     }
 
+    public function address()
+    {
+        return view('user.account-address', ['user' => Auth::user()]);
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $data = $request->validate([
+            'address' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
+            'state' => 'nullable|string|max:255',
+            'zip' => 'nullable|string|max:20',
+            'country' => 'nullable|string|max:255',
+        ]);
+
+        Auth::user()->update($data);
+
+        return redirect()->route('user.address')->with('success', __('messages.account_address_updated'));
+    }
+
+    public function details()
+    {
+        return view('user.account-details', ['user' => Auth::user()]);
+    }
+
+    public function updateDetails(Request $request)
+    {
+        $user = Auth::user();
+
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,'.$user->id,
+            'mobile' => 'required|string|max:30|unique:users,mobile,'.$user->id,
+        ]);
+
+        $user->update($data);
+
+        return redirect()->route('user.details')->with('success', __('messages.account_details_updated'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required|current_password',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        Auth::user()->update(['password' => bcrypt($request->password)]);
+
+        return redirect()->route('user.details')->with('success', __('messages.account_password_updated'));
+    }
+
     public function exportData()
     {
         $user = Auth::user();

@@ -97,6 +97,12 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/account-orders/{order_number}/invoice', [UserController::class,'order_invoice'])->name('user.order.invoice');
     Route::post('/account-orders/{order_number}/return', [UserController::class,'returnRequest'])->middleware('throttle:5,1')->name('user.order.return');
 
+    Route::get('/account-address', [UserController::class,'address'])->name('user.address');
+    Route::put('/account-address', [UserController::class,'updateAddress'])->name('user.address.update');
+    Route::get('/account-details', [UserController::class,'details'])->name('user.details');
+    Route::put('/account-details', [UserController::class,'updateDetails'])->name('user.details.update');
+    Route::put('/account-details/password', [UserController::class,'updatePassword'])->name('user.password.update');
+
     //checkout routes
     Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class,'store'])->middleware('throttle:10,1')->name('checkout.store');

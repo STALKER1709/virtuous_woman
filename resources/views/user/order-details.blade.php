@@ -18,9 +18,9 @@
               <p class="alert alert-danger">{{ $errors->first() }}</p>
             @endif
             <p>
-              Placed on {{ $order->created_at->format('Y-m-d H:i') }} &middot;
-              Status: <strong>{{ ucfirst($order->status) }}</strong> &middot;
-              Payment: {{ $order->payment_method === 'cod' ? 'Cash on Delivery' : 'Bank Transfer' }}
+              {{ __('messages.order_placed_on') }} {{ $order->created_at->format('Y-m-d H:i') }} &middot;
+              {{ __('messages.order_status_label') }}: <strong>{{ ucfirst($order->status) }}</strong> &middot;
+              {{ __('messages.order_payment_label') }}: {{ $order->payment_method === 'cod' ? __('messages.checkout_cod') : __('messages.checkout_bank_transfer') }}
             </p>
 
             <p>
@@ -33,10 +33,10 @@
               <table class="cart-table">
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Subtotal</th>
+                    <th>{{ __('messages.cart_product') }}</th>
+                    <th>{{ __('messages.cart_price') }}</th>
+                    <th>{{ __('messages.cart_quantity') }}</th>
+                    <th>{{ __('messages.cart_total') }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -54,7 +54,7 @@
 
             <div class="row mt-4">
               <div class="col-md-6">
-                <h5>Shipping Address</h5>
+                <h5>{{ __('messages.account_address_title') }}</h5>
                 <p class="mb-0">{{ $order->name }}</p>
                 <p class="mb-0">{{ $order->address }}</p>
                 <p class="mb-0">{{ $order->city }}{{ $order->state ? ', '.$order->state : '' }} {{ $order->zip }}</p>
@@ -65,15 +65,15 @@
                 <table class="cart-totals w-100">
                   <tbody>
                     <tr>
-                      <th>Subtotal</th>
+                      <th>{{ __('messages.cart_subtotal') }}</th>
                       <td>{{ number_format($order->subtotal, 2) }}&euro;</td>
                     </tr>
                     <tr>
-                      <th>Shipping</th>
-                      <td>Free</td>
+                      <th>{{ __('messages.checkout_shipping') }}</th>
+                      <td>{{ number_format($order->total - $order->subtotal, 2) }}&euro;</td>
                     </tr>
                     <tr>
-                      <th>Total</th>
+                      <th>{{ __('messages.cart_total') }}</th>
                       <td>{{ number_format($order->total, 2) }}&euro;</td>
                     </tr>
                   </tbody>

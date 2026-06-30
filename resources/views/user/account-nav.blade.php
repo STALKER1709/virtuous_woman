@@ -1,8 +1,8 @@
           <ul class="account-nav">
             <li><a href="{{route('user.index')}}" class="menu-link menu-link_us-s {{ request()->routeIs('user.index') ? 'active' : '' }}">{{ __('messages.account_dashboard') }}</a></li>
             <li><a href="{{ route('user.orders') }}" class="menu-link menu-link_us-s {{ request()->routeIs('user.orders') || request()->routeIs('user.order.details') ? 'active' : '' }}">{{ __('messages.account_orders') }}</a></li>
-            <li><a href="account-address.html" class="menu-link menu-link_us-s">{{ __('messages.account_addresses') }}</a></li>
-            <li><a href="account-details.html" class="menu-link menu-link_us-s">{{ __('messages.account_details') }}</a></li>
+            <li><a href="{{ route('user.address') }}" class="menu-link menu-link_us-s {{ request()->routeIs('user.address') ? 'active' : '' }}">{{ __('messages.account_addresses') }}</a></li>
+            <li><a href="{{ route('user.details') }}" class="menu-link menu-link_us-s {{ request()->routeIs('user.details') ? 'active' : '' }}">{{ __('messages.account_details') }}</a></li>
             <li><a href="{{ route('wishlist.index') }}" class="menu-link menu-link_us-s {{ request()->routeIs('wishlist.index') ? 'active' : '' }}">{{ __('messages.account_wishlist') }}</a></li>
             <li><a href="{{ route('user.export-data') }}" class="menu-link menu-link_us-s">{{ __('messages.account_download_data') }}</a></li>
             <li>
